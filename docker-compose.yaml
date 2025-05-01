@@ -1,0 +1,16 @@
+services:
+  server:
+    image: node:alpine
+    working_dir: /home/app
+    tty: true
+    stdin_open: true
+    user: node
+    volumes:
+      - ./:/home/app
+    ports:
+      - 3000:3000
+    networks:
+      - dev
+
+networks:
+  dev:
