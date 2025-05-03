@@ -3,9 +3,10 @@ import Link from "next/link"
 import { Button } from "../ui/button";
 import { ModeToggle } from "../common/DarkModeToggle";
 import LogoutButton from "../common/LogoutButton";
+import { getUser } from "@/auth/server";
 
-function Header() {
-  const user = 1;
+async function Header() {
+  const user = await getUser();
   return (
     <header className="relative flex h-24 w-full items-center justify-between bg-popover px-3 sm:px-6"
         style={{
@@ -23,12 +24,12 @@ function Header() {
             ) : (
               <>
                 <Button asChild className="hidden sm:block">
-                  <Link href={"/"} >
+                  <Link href={"/sign-up"} >
                     Sign Up
                   </Link>
                 </Button>
                 <Button asChild variant={"outline"} >
-                  <Link href={"/"}>
+                  <Link href={"/login"}>
                     Login
                   </Link>
                 </Button>

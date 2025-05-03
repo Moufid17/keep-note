@@ -5,20 +5,21 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
+import { logout } from '@/app/actions/users'
 
 function LogoutButton() {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
+
     const handleLogout = async () => {
         setLoading(true)
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-
-        const errorMessage = null
-        if (!errorMessage) {
+        
+        const error = await logout()
+        if (!error?.errorMessage) {
             toast.success("User logged out successfully")
             router.push("/")
         } else {
-            toast.error(errorMessage)
+            toast.error(error.errorMessage)
         }
         setLoading(false)
     }

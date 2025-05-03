@@ -8,9 +8,11 @@ import { Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useTransition } from 'react'
 import { toast } from 'sonner'
+import { login } from '@/app/actions/users'
+import { useRouter } from 'next/navigation'
 
 function Login() {
-
+    const router = useRouter()
     const [isPending, startTransition] = useTransition()
 
     const handleSubmit = (formData: FormData) => {
@@ -18,13 +20,12 @@ function Login() {
         const password = formData.get('password') as string
 
         startTransition(async () => {
-            await new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve(true)
-                }, 2000);
-            })
-            toast.info(`email: ${email}, password: ${password}`)
+            const error = await login(email, password)
+            if (error?.errorMessage) toast.error(error.errorMessage)
+            toast.success("Login successful")
+            router.replace('/')
         })
+
     }
 
     return (
