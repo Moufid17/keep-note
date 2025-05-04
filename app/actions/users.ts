@@ -14,7 +14,7 @@ export async function login(email: string, password: string) {
 
     return {errorMessage: null}
   } catch (error) {
-    handleError(error)
+    return handleError(error)
   }
 }
 
@@ -35,7 +35,7 @@ export async function signup(email: string, password: string) {
         })
         return {errorMessage: null}
     } catch (error) {
-        handleError(error)
+        return handleError(error)
     }
 }
 
@@ -48,6 +48,6 @@ export async function logout() {
 
         return {errorMessage: null}
     } catch (error) {
-        handleError(error)
+        return handleError(error)
     }
 }
