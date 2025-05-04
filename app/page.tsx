@@ -29,7 +29,7 @@ export default async function Home({ searchParams }: Props) {
           <Button>Ask IA</Button>
           <NewNoteButton user={user}/>
         </div>
-        <NoteTextArea />       
+        <NoteTextArea noteId={noteId} startingNoteText={note ? note.text : ""}/>       
       </div>
     </div>
   );
