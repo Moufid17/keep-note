@@ -19,13 +19,15 @@ function NewNoteButton({ user }: NewNoteButtonProps) {
 
         setIsLoading(true);
 
-        const uuid = crypto.randomUUID()
+        const uuid : string = crypto.randomUUID()
         const error = await createNoteAction(uuid);
-        if (error?.errorMessage) {
-            toast.error(error?.errorMessage);
-        } else {
-            toast.success("Note created successfully");
-            router.push(`/?noteId=${uuid}`);
+        if (error) {
+            if (error.errorMessage) {
+                toast.error(error?.errorMessage);
+            } else {
+                toast.success("Note created successfully");
+                router.push(`/?noteId=${uuid}`);
+            }
         }
         
         setIsLoading(false);
