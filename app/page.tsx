@@ -18,8 +18,12 @@ export default async function Home({ searchParams }: Props) {
 
   const note = await prismaClient.note.findUnique({
     where: {
-      id: noteId, authorId: user?.id
+      id: noteId, 
+      author: { email: user?.email }  
     },
+    select: {
+      text: true,
+    }
   });
 
   return (
