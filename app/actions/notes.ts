@@ -7,20 +7,30 @@ export const createNoteAction = async (noteId: string) => {
     try {
         if (noteId.length <= 0) throw new Error("Note ID is required");
 
+        // User from supabase auth
         const user = await getUser();
         if (!user) throw new Error("User not found");
+
+        // User from database
+        const existingNote = await prismaClient.user.findUnique({
+            where: { email: user.email },
+            select: {
+                id: true,
+            }
+        });
+        if (!existingNote) throw new Error("User not found");
     
         await prismaClient.note.create({
             data: {
                 id: noteId,
                 // title: "",
                 text: "",
-                authorId: user.id,
+                authorId: existingNote.id,
             }
         })
         return {errorMessage: null}
     } catch (error) {
-        handleError(error);
+        return handleError(error);
     }
 }
 
