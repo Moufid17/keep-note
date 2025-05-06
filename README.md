@@ -1,6 +1,7 @@
 # Keep Note
 
 Keep Note is a simple and efficient note-taking application designed to help you organize your thoughts, tasks, and ideas.
+- Inspired by a modern [google keep](https://keep.google.com/) web applications.
 
 ## Features
 
@@ -20,4 +21,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgments
 
-- Inspired by a modern [google keep](https://keep.google.com/) web applications.
+
