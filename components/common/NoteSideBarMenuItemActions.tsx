@@ -16,12 +16,14 @@ import NoteDeleteButton from "./NoteDeleteButton"
 
 interface NoteSideBarProps {
     note: NoteListSibeBarProps
+    editingNoteId: string|null
+    setEditingNoteId: (id: string|null) => void
     onDeleteLocally?: () => void
 }
 
 const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
     const noteId = useSearchParams().get("noteId") ?? ""
-    const { note, onDeleteLocally } = props
+    const { note, editingNoteId, setEditingNoteId, onDeleteLocally } = props
     const { noteText: selectedNoteText } = useNote();
     const [localedNoteText, setLocaleNoteText] = useState<string>(note.text)
     const [localNoteTitle, setNoteTitle] = useState<string>(note.title ?? "")
@@ -47,10 +49,13 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
                 toast.success("Note renamed successfully")
             }
         })
-        if (!isPendingToUpdateNoteTitle) setLoading(false)
+        if (!isPendingToUpdateNoteTitle) {
+            setLoading(false)
+            setEditingNoteId(null)
+        }
     }
 
-    if (isLoading) {
+    if (isLoading && editingNoteId === note.id) {
         return (<Input
             type="text"
             value={noteTitle}
@@ -67,18 +72,21 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
     }
 
     return (
-        <SidebarMenuItem>
-            <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer`}>
+        <SidebarMenuItem >
+            <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer }`}>
                 <Link href={`/?noteId=${note.id}`}><LoadingIndicator /><p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText}</p></Link>
             </SidebarMenuButton>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <SidebarMenuAction >
+                    <SidebarMenuAction key={note.id} onClick={() => {}}>
                         <EllipsisVertical className={`${noteId === note.id && "text-black"}`}/>
                     </SidebarMenuAction>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="right" align="start">
-                    <DropdownMenuItem onClick={() => setLoading(true)} className="cursor-pointer justify-center">
+                    <DropdownMenuItem onClick={() => {
+                        setLoading(true)
+                        setEditingNoteId(note.id)
+                    }} className="cursor-pointer justify-center">
                         <SquarePen /><span>Rename</span>
                     </DropdownMenuItem>
                     <NoteDeleteButton noteId={note.id} onDeleteLocally={onDeleteLocally} />

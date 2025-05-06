@@ -18,6 +18,7 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
     const router = useRouter();
     const { title, notes, defaultOpen } = props
     const [localNotes, setLocalNotes] = useState(notes);
+    const [editingNoteId, setEditingNoteId] = useState<string|null>(null);
 
     useEffect(() => {
       setLocalNotes(notes);
@@ -49,6 +50,8 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
                             {localNotes.map((note: NoteListSibeBarProps) => 
                                     <NoteSideBarMenuItemActions key={`${note.id}`} note={note}
                                         onDeleteLocally={() => deleteNoteLocally(note.id)}
+                                        editingNoteId={editingNoteId}
+                                        setEditingNoteId={(id: string|null) => setEditingNoteId(id)}
                                     />
                                 )
                             }
