@@ -1,16 +1,17 @@
 "use client"
 import { useSearchParams } from "next/navigation"
-import {  useEffect, useMemo, useState, useTransition } from "react"
+import {  useEffect, useState, useTransition } from "react"
+import { toast } from "sonner"
 import Link from "next/link"
 import { SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Archive, EllipsisVertical, SquarePen, Trash2 } from "lucide-react"
+import { EllipsisVertical, SquarePen } from "lucide-react"
 import { NoteListSibeBarProps } from "@/components/layout/AppSidebar"
+import LoadingIndicator from "@/components/common/loading-indicator"
+import { Input } from "@/components/ui/input"
 import useNote from "@/hooks/useNote"
-import LoadingIndicator from "./loading-indicator"
-import { updateNoteArchiveAction, updateNoteTitleAction } from "@/app/actions/notes"
-import { toast } from "sonner"
-import { Input } from "../ui/input"
+import { updateNoteTitleAction } from "@/app/actions/notes"
+import NoteDeleteButton from "./NoteDeleteButton"
 
 interface NoteSideBarProps {
     note: NoteListSibeBarProps
@@ -25,7 +26,6 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
     const [localNoteTitle, setNoteTitle] = useState<string>(note.title ?? "")
 
     const [isPendingToUpdateNoteTitle, startTransitionToUpdateNoteTitle] = useTransition()
-    const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
     const [isLoading, setLoading] = useState(false)
     
     useEffect(() => {
@@ -46,17 +46,6 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
             }
         })
         if (!isPendingToUpdateNoteTitle) setLoading(false)
-    }
-    const handleArchiveNote = () => {
-        startTransitionToArchiveNote(async() => {
-            const error = await updateNoteArchiveAction(note.id, true)
-            if (error?.errorMessage) {
-                toast.error(error.errorMessage)
-            } else {
-                toast.success("Note archived successfully")
-            }
-        })
-        if (!isPendingToArchiveNote && onDeleteLocally) onDeleteLocally()
     }
 
     if (isLoading) {
@@ -90,9 +79,7 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
                     <DropdownMenuItem onClick={() => setLoading(true)} className="cursor-pointer">
                         <SquarePen /><span>Rename</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleArchiveNote} className="cursor-pointer">
-                        <Trash2 className="text-brand-500"/><span className="text-brand-500">Delete</span>
-                    </DropdownMenuItem>
+                    <NoteDeleteButton noteId={note.id} onDeleteLocally={onDeleteLocally} />
                 </DropdownMenuContent>}
             </DropdownMenu>
         </SidebarMenuItem>
