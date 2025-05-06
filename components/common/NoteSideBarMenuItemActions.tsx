@@ -1,3 +1,4 @@
+// [ ] Avoid to edit multiple note title: should be one by one.
 "use client"
 import { useSearchParams } from "next/navigation"
 import {  useEffect, useState, useTransition } from "react"
@@ -35,6 +36,7 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
     }, [noteId, selectedNoteText, note.id]);
 
     let noteText = localedNoteText || "EMPTY NOTE";
+    let noteTitle = localNoteTitle || note.text.slice(0, 20);
 
     const handleRenameNote = () => {
         startTransitionToUpdateNoteTitle(async() => {
@@ -51,7 +53,7 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
     if (isLoading) {
         return (<Input
             type="text"
-            value={localNoteTitle}
+            value={noteTitle}
             onChange={(e) => setNoteTitle(e.target.value)}
             placeholder="Rename note"
             className="w-full bg-transparent text-sm text-muted-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-brand-500"
@@ -75,12 +77,12 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
                         <EllipsisVertical className={`${noteId === note.id && "text-black"}`}/>
                     </SidebarMenuAction>
                 </DropdownMenuTrigger>
-                {<DropdownMenuContent side="right" align="start">
-                    <DropdownMenuItem onClick={() => setLoading(true)} className="cursor-pointer">
+                <DropdownMenuContent side="right" align="start">
+                    <DropdownMenuItem onClick={() => setLoading(true)} className="cursor-pointer justify-center">
                         <SquarePen /><span>Rename</span>
                     </DropdownMenuItem>
                     <NoteDeleteButton noteId={note.id} onDeleteLocally={onDeleteLocally} />
-                </DropdownMenuContent>}
+                </DropdownMenuContent>
             </DropdownMenu>
         </SidebarMenuItem>
     )

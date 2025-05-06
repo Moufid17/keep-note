@@ -1,10 +1,22 @@
 "use client"
-import { useEffect, useState, useTransition } from 'react'
+import { ReactNode, useEffect, useState, useTransition } from 'react'
 import { DropdownMenuItem } from '../ui/dropdown-menu'
 import { Trash2 } from 'lucide-react'
 import { toast } from "sonner"
 import { updateNoteArchiveAction } from '@/app/actions/notes'
-import { NoteListSibeBarProps } from '../layout/AppSidebar'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from '../ui/button'
+  
 
 interface INoteDeleteButton {
     noteId: string
@@ -35,9 +47,27 @@ function NoteDeleteButton(props: INoteDeleteButton) {
     }
 
     return (
-        <DropdownMenuItem onClick={handleArchiveNote} className="cursor-pointer">
-            <Trash2 className="text-brand-500"/><span className="text-brand-500">Delete</span>
-        </DropdownMenuItem>
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button variant="ghost" className="cursor-pointer w-full text-brand-500 hover:text-brand-500 ">
+                    <Trash2 className="py-0"/><span className='text-left'>Delete</span>
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    This action cannot be undone. This will permanently archive this note.
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogCancel>Ignore</AlertDialogCancel>
+                <AlertDialogAction onClick={handleArchiveNote} disabled={isPendingToArchiveNote} className='bg-brand-500 text-black hover:bg-brand-500 hover:text-black'>
+                    <span className="text-black">Delete</span>
+                </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     )
 }
 
