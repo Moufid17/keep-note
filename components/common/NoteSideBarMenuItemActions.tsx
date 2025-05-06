@@ -40,7 +40,7 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
 
     const handleRenameNote = () => {
         startTransitionToUpdateNoteTitle(async() => {
-            const error = await updateNoteTitleAction(note.id, localNoteTitle)
+            const error = await updateNoteTitleAction(note.id, noteTitle)
             if (error?.errorMessage) {
                 toast.error(error.errorMessage)
             } else {

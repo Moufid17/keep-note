@@ -1,6 +1,5 @@
 "use client"
-import { ReactNode, useEffect, useState, useTransition } from 'react'
-import { DropdownMenuItem } from '../ui/dropdown-menu'
+import { useEffect, useState, useTransition } from 'react'
 import { Trash2 } from 'lucide-react'
 import { toast } from "sonner"
 import { updateNoteArchiveAction } from '@/app/actions/notes'
