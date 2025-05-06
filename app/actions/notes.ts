@@ -34,7 +34,7 @@ export const createNoteAction = async (noteId: string) => {
     }
 }
 
-export const updateNoteAction = async (noteId: string, text: string) => {
+export const updateNoteAction = async (noteId: string, text: string, title="") => {
     try {
         if (noteId.length <= 0) throw new Error("Note ID is required");
         if (text.length <= 0) throw new Error("Text is required");
@@ -44,7 +44,7 @@ export const updateNoteAction = async (noteId: string, text: string) => {
     
         await prismaClient.note.update({
             where: { id: noteId },
-            data: { text },
+            data: { text , title },
         });
     
         return { errorMessage: null };
@@ -52,6 +52,25 @@ export const updateNoteAction = async (noteId: string, text: string) => {
         return handleError(error);
     }
   };
+
+export const updateNoteTitleAction = async (noteId: string, title="") => {
+    try {
+        if (noteId.length <= 0) throw new Error("Note ID is required");
+        if (title.length <= 0) throw new Error("Text is required");
+
+        const user = await getUser();
+        if (!user) throw new Error("You must be logged in to update a note");
+    
+        await prismaClient.note.update({
+            where: { id: noteId },
+            data: { title },
+        });
+    
+        return { errorMessage: null };
+    } catch (error) {
+        return handleError(error);
+    }
+};
   
 export const deleteNoteAction = async (noteId: string) => {
     try {

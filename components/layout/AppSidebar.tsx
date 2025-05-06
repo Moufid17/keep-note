@@ -15,6 +15,7 @@ import NoteSideBarMenuGroup from "@/components/common/NoteSideBarMenuGroup"
 
 export type NoteListSibeBarProps = {
     id: string
+    title?: string
     text: string
 }
 
@@ -25,9 +26,11 @@ export async function AppSidebar() {
         notes = await prismaClient.note.findMany({
             where: {
                 author: {email: user.email},
+                isArchived: { equals: false },
             },
             select: {
                 id: true,
+                title: true,
                 text: true,
             },
             orderBy: {
