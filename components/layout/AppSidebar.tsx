@@ -5,16 +5,15 @@ import {
     SidebarGroup,
     SidebarGroupContent,
     SidebarHeader,
-  } from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar"
 
 import { prismaClient } from "@/db/prisma"
 import { getUser } from "@/auth/server"
 import Link from "next/link"
 import NoteSideBarMenuGroup from "@/components/common/NoteSideBarMenuGroup"
-import NoteSideBarMenuItemActions from "@/components/common/NoteSideBarMenuItemActions"
 
 
-type NoteListSibeBarProps = {
+export type NoteListSibeBarProps = {
     id: string
     text: string
 }
@@ -51,12 +50,7 @@ export async function AppSidebar() {
                     <SidebarGroup>
                         <SidebarGroupContent>
                             <SidebarGroupContent>
-                                <NoteSideBarMenuGroup defaultOpen title="Notes">
-                                    {notes.map((note: NoteListSibeBarProps) => 
-                                            <NoteSideBarMenuItemActions key={`${note.id}`} id={`${note.id}`}  title={`${note.text.slice(0, 28)}`}/>
-                                        )
-                                    }
-                                </NoteSideBarMenuGroup>
+                                <NoteSideBarMenuGroup defaultOpen title="Notes" notes={notes}/> 
                             </SidebarGroupContent>
                         </SidebarGroupContent>
                     </SidebarGroup>
