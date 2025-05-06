@@ -71,6 +71,24 @@ export const updateNoteTitleAction = async (noteId: string, title="") => {
         return handleError(error);
     }
 };
+
+export const updateNoteArchiveAction = async (noteId: string, isArchive=false) => {
+    try {
+        if (noteId.length <= 0) throw new Error("Note ID is required");
+
+        const user = await getUser();
+        if (!user) throw new Error("You must be logged in to update a note");
+    
+        await prismaClient.note.update({
+            where: { id: noteId },
+            data: { isArchived: isArchive },
+        });
+    
+        return { errorMessage: null };
+    } catch (error) {
+        return handleError(error);
+    }
+};
   
 export const deleteNoteAction = async (noteId: string) => {
     try {

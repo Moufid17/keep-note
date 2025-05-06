@@ -8,7 +8,7 @@ import { Archive, EllipsisVertical, SquarePen, Trash2 } from "lucide-react"
 import { NoteListSibeBarProps } from "@/components/layout/AppSidebar"
 import useNote from "@/hooks/useNote"
 import LoadingIndicator from "./loading-indicator"
-import { updateNoteTitleAction } from "@/app/actions/notes"
+import { updateNoteArchiveAction, updateNoteTitleAction } from "@/app/actions/notes"
 import { toast } from "sonner"
 import { Input } from "../ui/input"
 
@@ -24,7 +24,8 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
     const [localedNoteText, setLocaleNoteText] = useState<string>(note.text)
     const [localNoteTitle, setNoteTitle] = useState<string>(note.title ?? "")
 
-    const [isPending, startTransition] = useTransition()
+    const [isPendingToUpdateNoteTitle, startTransitionToUpdateNoteTitle] = useTransition()
+    const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
     const [isLoading, setLoading] = useState(false)
     
     useEffect(() => {
@@ -36,7 +37,7 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
     let noteText = localedNoteText || "EMPTY NOTE";
 
     const handleRenameNote = () => {
-        startTransition(async() => {
+        startTransitionToUpdateNoteTitle(async() => {
             const error = await updateNoteTitleAction(note.id, localNoteTitle)
             if (error?.errorMessage) {
                 toast.error(error.errorMessage)
@@ -44,7 +45,18 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
                 toast.success("Note renamed successfully")
             }
         })
-        if (!isPending) setLoading(false)
+        if (!isPendingToUpdateNoteTitle) setLoading(false)
+    }
+    const handleArchiveNote = () => {
+        startTransitionToArchiveNote(async() => {
+            const error = await updateNoteArchiveAction(note.id, true)
+            if (error?.errorMessage) {
+                toast.error(error.errorMessage)
+            } else {
+                toast.success("Note archived successfully")
+            }
+        })
+        if (!isPendingToArchiveNote && onDeleteLocally) onDeleteLocally()
     }
 
     if (isLoading) {
@@ -62,7 +74,7 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
             autoFocus
         />)
     }
-    
+
     return (
         <SidebarMenuItem>
             <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer`}>
@@ -78,8 +90,8 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
                     <DropdownMenuItem onClick={() => setLoading(true)} className="cursor-pointer">
                         <SquarePen /><span>Rename</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={onDeleteLocally}>
-                        <Trash2 className="text-brand-500"/><span className="text-brand-500 cursor-pointer">Delete</span>
+                    <DropdownMenuItem onClick={handleArchiveNote} className="cursor-pointer">
+                        <Trash2 className="text-brand-500"/><span className="text-brand-500">Delete</span>
                     </DropdownMenuItem>
                 </DropdownMenuContent>}
             </DropdownMenu>
