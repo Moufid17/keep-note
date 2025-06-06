@@ -6,22 +6,23 @@ import { toast } from "sonner"
 import Link from "next/link"
 import { SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { EllipsisVertical, SquarePen } from "lucide-react"
+import { EllipsisVertical, SquarePen, XIcon } from "lucide-react"
 import { NoteListSibeBarProps } from "@/components/layout/AppSidebar"
 import LoadingIndicator from "@/components/common/loading-indicator"
 import { Input } from "@/components/ui/input"
 import useNote from "@/hooks/useNote"
 import { updateNoteTitleAction } from "@/app/actions/notes"
 import NoteDeleteButton from "./NoteDeleteButton"
+import { Button } from "../ui/button"
 
-interface NoteSideBarProps {
+interface INoteSideBar {
     note: NoteListSibeBarProps
     editingNoteId: string|null
     setEditingNoteId: (id: string|null) => void
     onDeleteLocally?: () => void
 }
 
-const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
+const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
     const noteId = useSearchParams().get("noteId") ?? ""
     const { note, editingNoteId, setEditingNoteId, onDeleteLocally } = props
     const { noteText: selectedNoteText } = useNote();
@@ -56,19 +57,32 @@ const NoteSideBarMenuItemActions = (props: NoteSideBarProps) => {
     }
 
     if (isLoading && editingNoteId === note.id) {
-        return (<Input
-            type="text"
-            value={noteTitle}
-            onChange={(e) => setNoteTitle(e.target.value)}
-            placeholder="Rename note"
-            className="w-full bg-transparent text-sm text-muted-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-brand-500"
-            onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                    handleRenameNote()
-                }
-            }}
-            autoFocus
-        />)
+        return (
+        <div className="relative w-full max-w-sm">
+            <Input type="text"
+                value={localNoteTitle}
+                onChange={(e) => setNoteTitle(e.target.value)}
+                placeholder="Rename note"
+                className="w-full bg-transparent text-sm text-muted-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-brand-500"
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        handleRenameNote()
+                    }
+                }}
+                autoFocus
+            />
+            <Button type="button" variant="ghost" size="icon"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                onClick={() => { 
+                    setNoteTitle(note.title ?? localNoteTitle)
+                    setLoading(false)
+                    setEditingNoteId(null)
+                }}
+            >
+                <XIcon className="h-4 w-4"/><span className="sr-only">Clear</span>
+            </Button>
+        </div>
+        )
     }
 
     return (
