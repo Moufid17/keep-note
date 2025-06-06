@@ -1,8 +1,10 @@
 import { getUser } from "@/auth/server";
+import HomePage from "@/components/common/HomePage";
 import NewNoteButton from "@/components/common/NewNoteButton";
 import NoteTextArea from "@/components/common/NoteTextArea";
 import { Button } from "@/components/ui/button";
 import { prismaClient } from "@/db/prisma";
+import { generateNoteId } from "@/lib/utils";
 
 type Props = {
   searchParams: Promise<{
@@ -11,10 +13,14 @@ type Props = {
 };
 
 export default async function Home({ searchParams }: Props) {
-  const nodeIdParam = (await searchParams).noteId || "";
   const user = await getUser();
 
-  const noteId = (Array.isArray(nodeIdParam)) ? nodeIdParam[0] : nodeIdParam;
+  if (!user) return ( <HomePage /> )
+    
+  const nodeIdParam = (await searchParams).noteId || "";
+  
+  let noteId = (Array.isArray(nodeIdParam)) ? nodeIdParam[0] : nodeIdParam;
+  if (noteId.length === 0) noteId = generateNoteId()
 
   const note = await prismaClient.note.findUnique({
     where: {
