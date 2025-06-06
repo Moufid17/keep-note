@@ -51,6 +51,8 @@
   --color-brand-800: #295a1a;
   --color-brand-900: #264d1a;
   --color-brand-950: #0f2a09;
+
+  --shadow-header-brand-400: 0px 2px 5px var(--color-brand-400); 
 }
 
 :root {
@@ -131,16 +133,7 @@
   }
 }
 
-
-.spinner {
-  /* ... */
-  color: brown;
-  opacity: 0;
-  animation:
-    fadeIn 500ms 100ms forwards,
-    rotate 1s linear infinite;
-}
- 
+/* Appsidebar menu element LoadingIndicator */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -155,3 +148,81 @@
     transform: rotate(360deg);
   }
 }
+
+.spinner {
+  color: brown;
+  opacity: 0;
+  animation:
+    fadeIn 500ms 100ms forwards,
+    rotate 1s linear infinite;
+}
+
+/* Section Home Page  */
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes move {
+  25% {
+    transform: translatey(-4vmin);
+  }
+  50% {
+    transform: translatey(-8.5vmin);
+  }
+  75% {
+    transform: translatey(-12.5vmin);
+  }
+}
+
+section#homepage {
+  /* Background image */
+  .background-image-before {
+    background-image: 
+      linear-gradient(to bottom, #80808012 1px, transparent 1px),
+      linear-gradient(to left, #80808012 1px, transparent 1px); 
+    
+      /* Le transparent couvre la couleur précédente qui est considérer comme ignoré */
+    -webkit-mask-image: linear-gradient(to bottom right, black 35%, transparent 36%);
+    mask-image: linear-gradient(to bottom right, black 35%, transparent 40%);
+  }
+
+  .background-image-before {
+    background-image: 
+      linear-gradient(to top, #80808012 1px, transparent 1px),
+      linear-gradient(to right, #80808012 1px, transparent 1px); 
+    
+    -webkit-mask-image: linear-gradient(to top left, black 15%, transparent 16%);
+    mask-image: linear-gradient(to top left, black 15%, transparent 16%);
+  }
+
+  /* H1 Text animation */
+  .typewriter-animation {
+    animation: 
+      typewriter 5s steps(35) 1s 1 normal both, 
+  }
+  /* H3 text animation  */
+  .text-roller-animation { animation: move 10s infinite; }
+  .text-roller {
+    position: relative;
+    top: -4vmin;
+    left: 13vmin;
+  }
+  .closure::before {
+    content: '';
+    position: absolute;
+    height: 20vmin;
+    width: 54.5vmin;
+    background: var(--background);
+    transform: translate(-14.2vmin, -39vmin);
+  }
+  .closure::after {
+    content: '';
+    position: absolute;
+    height: 20vmin;
+    width: 54.5vmin;
+    background: var(--background);
+    transform: translate(-14.2vmin, -16.6vmin);
+  }
+}
+
