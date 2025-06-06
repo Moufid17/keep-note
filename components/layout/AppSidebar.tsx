@@ -17,6 +17,7 @@ export type NoteListSibeBarProps = {
     id: string
     title?: string
     text: string
+    isArchived: boolean
 }
 
 export async function AppSidebar() {
@@ -26,27 +27,30 @@ export async function AppSidebar() {
 
     let notes: NoteListSibeBarProps[] = []
     notes = await prismaClient.note.findMany({
-        where: {
-            author: {email: user.email},
-            isArchived: { equals: false },
-        },
+        where: { author: {email: user.email}, },
         select: {
             id: true,
             title: true,
             text: true,
+            isArchived: true,
         },
         orderBy: {
             createdAt: "desc",
         },
     })
+    let notesMap: Record<string, NoteListSibeBarProps[]> = {
+        unArchivedNotes : [],
+        archivedNotes : [],
+    }
+    notesMap = notes.reduce((acc, currentNote) => {
+        currentNote.isArchived ? acc["archivedNotes"].push(currentNote) : acc["unArchivedNotes"].push(currentNote)
+        return acc
+    }, notesMap)
     return (
         <Sidebar>
             <SidebarHeader>
                 <div className="flex items-center justify-between px-4 py-2">
-                    {user ? <h1 className="text-lg font-bold">Keep note</h1>
-                    :
-                        <p> <Link href="/login" className="underline">Login</Link>{" "} to see your notes </p>
-                    }
+                    {!user && <p> <Link href="/login" className="underline">Login</Link>{" "} to see your notes </p> }
                 </div>
             </SidebarHeader>
             {user && (
@@ -54,7 +58,14 @@ export async function AppSidebar() {
                     <SidebarGroup>
                         <SidebarGroupContent>
                             <SidebarGroupContent>
-                                <NoteSideBarMenuGroup defaultOpen title="Notes" notes={notes}/> 
+                                <NoteSideBarMenuGroup defaultOpen title="Notes" notes={notesMap.unArchivedNotes}/> 
+                            </SidebarGroupContent>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                    <SidebarGroup>
+                        <SidebarGroupContent>
+                            <SidebarGroupContent>
+                                <NoteSideBarMenuGroup defaultOpen title="Notes Archived" notes={notesMap.archivedNotes}/> 
                             </SidebarGroupContent>
                         </SidebarGroupContent>
                     </SidebarGroup>
