@@ -5,6 +5,7 @@ import { User } from "@supabase/supabase-js";
 import { useRouter } from 'next/navigation';
 import { createNoteAction } from '@/app/actions/notes';
 import { toast } from 'sonner';
+import { generateNoteId } from '@/lib/utils';
 
 type NewNoteButtonProps = {
     user: User | null
@@ -19,7 +20,7 @@ function NewNoteButton({ user }: NewNoteButtonProps) {
 
         setIsLoading(true);
 
-        const uuid : string = crypto.randomUUID()
+        const uuid : string = generateNoteId();
         const error = await createNoteAction(uuid);
         if (error) {
             if (error.errorMessage) {

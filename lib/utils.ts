@@ -15,3 +15,7 @@ export const handleError = (error: unknown) : ErrorResponse => {
   }
   return {errorMessage: "An unknown error occurred."}
 }
+
+export const generateNoteId = () : string => {
+  return crypto.randomUUID()
+}
