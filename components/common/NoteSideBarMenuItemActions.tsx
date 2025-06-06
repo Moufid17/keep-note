@@ -11,10 +11,9 @@ import { NoteListSibeBarProps } from "@/components/layout/AppSidebar"
 import LoadingIndicator from "@/components/common/loading-indicator"
 import { Input } from "@/components/ui/input"
 import useNote from "@/hooks/useNote"
-import { updateNoteTitleAction } from "@/app/actions/notes"
 import NoteDeleteButton from "./NoteDeleteButton"
-import { Button } from "../ui/button"
-
+import { Button } from "@/components/ui/button"
+import { updateNoteTitleAction } from "@/app/actions/notes"
 interface INoteSideBar {
     note: NoteListSibeBarProps
     editingNoteId: string|null
@@ -25,6 +24,7 @@ interface INoteSideBar {
 const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
     const noteId = useSearchParams().get("noteId") ?? ""
     const { note, editingNoteId, setEditingNoteId, onDeleteLocally } = props
+    
     const { noteText: selectedNoteText } = useNote();
     const [localedNoteText, setLocaleNoteText] = useState<string>(note.text)
     const [localNoteTitle, setNoteTitle] = useState<string>(note.title ?? "")
@@ -69,7 +69,7 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
                         handleRenameNote()
                     }
                 }}
-                autoFocus
+                autoFocus={isLoading && editingNoteId === note.id}
             />
             <Button type="button" variant="ghost" size="icon"
                 className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
@@ -86,27 +86,32 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
     }
 
     return (
-        <SidebarMenuItem >
-            <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer }`}>
-                <Link href={`/?noteId=${note.id}`}><LoadingIndicator /><p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText}</p></Link>
-            </SidebarMenuButton>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <SidebarMenuAction key={note.id} onClick={() => {}}>
-                        <EllipsisVertical className={`${noteId === note.id && "text-black"}`}/>
-                    </SidebarMenuAction>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent side="right" align="start">
-                    <DropdownMenuItem onClick={() => {
-                        setLoading(true)
-                        setEditingNoteId(note.id)
-                    }} className="cursor-pointer justify-center">
-                        <SquarePen /><span>Rename</span>
-                    </DropdownMenuItem>
-                    <NoteDeleteButton noteId={note.id} onDeleteLocally={onDeleteLocally} />
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </SidebarMenuItem>
+       <>
+         {!isLoading && editingNoteId !== note.id && (
+            <SidebarMenuItem>
+                <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer }`}>
+                    <Link href={`/?noteId=${note.id}`} onClick={() => setNoteTitle(localNoteTitle.length > 0 ? localNoteTitle : noteText)}><LoadingIndicator /><p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText}</p></Link>
+                </SidebarMenuButton>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <SidebarMenuAction key={note.id} onClick={() => {}}>
+                            <EllipsisVertical className={`${noteId === note.id && "text-black"}`}/>
+                        </SidebarMenuAction>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent side="right" align="start">
+                        <DropdownMenuItem className="cursor-pointer justify-center" onClick={() => {
+                                setLoading(true)
+                                setEditingNoteId(note.id)
+                            }}
+                        >
+                            <SquarePen /><span>Rename</span>
+                        </DropdownMenuItem>
+                        <NoteDeleteButton noteId={note.id} onDeleteLocally={onDeleteLocally} />
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </SidebarMenuItem>)
+        }
+       </>
     )
 }
 export default NoteSideBarMenuItemActions

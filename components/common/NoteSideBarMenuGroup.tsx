@@ -21,12 +21,12 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
     const [editingNoteId, setEditingNoteId] = useState<string|null>(null);
 
     useEffect(() => {
-      setLocalNotes(notes);
+        setLocalNotes(notes);
     }, [notes]);
 
     const deleteNoteLocally = (noteId: string) => {
         const updatedNotes = localNotes.filter((note) => note.id !== noteId);
-        setLocalNotes((prevNotes) => updatedNotes);
+        setLocalNotes((_) => updatedNotes);
         
         if (updatedNotes.length >= 1) {
             router.replace(`/?noteId=${updatedNotes[0]?.id}`)
