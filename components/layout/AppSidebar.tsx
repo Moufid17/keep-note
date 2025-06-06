@@ -21,23 +21,24 @@ export type NoteListSibeBarProps = {
 
 export async function AppSidebar() {
     const user = await getUser();
+
+    if (!user) return <></>
+
     let notes: NoteListSibeBarProps[] = []
-    if (user) {
-        notes = await prismaClient.note.findMany({
-            where: {
-                author: {email: user.email},
-                isArchived: { equals: false },
-            },
-            select: {
-                id: true,
-                title: true,
-                text: true,
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-        })
-    }
+    notes = await prismaClient.note.findMany({
+        where: {
+            author: {email: user.email},
+            isArchived: { equals: false },
+        },
+        select: {
+            id: true,
+            title: true,
+            text: true,
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+    })
     return (
         <Sidebar>
             <SidebarHeader>
