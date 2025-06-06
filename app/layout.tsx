@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/layout/Header";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import NoteProvider from "@/providers/NoteProvider";
 
@@ -56,7 +56,6 @@ export default function RootLayout({
               <div className="flex flex-col min-h-screen w-full">
                 <Header />
                 <main className="flex flex-1 flex-col px-4 pt-10 xl:px-8">
-                  <SidebarTrigger />
                   {children}
                 </main>
               </div>
