@@ -14,7 +14,7 @@ async function Header() {
         <Link href={"/"} className="flex items-center gap-2">
           {user && (<SidebarTrigger />)}
           <Image src={"/app.svg"} width={60} height={60} alt="logo" priority className="rounded-full" />
-          <h1 className="flex flex-col pb-1 text-2xl font-semibold leading-6">
+          <h1 className="hidden md:visible md:flex flex-col pb-1 text-2xl font-semibold leading-6">
             Keep <span>Notes</span>
           </h1>
         </Link>

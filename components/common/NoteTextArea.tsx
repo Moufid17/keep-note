@@ -39,7 +39,7 @@ function NoteTextArea({ noteId, startingNoteText }: Props) {
       onChange={handleOnchangeNoteTextArea}
       autoFocus
       placeholder="Type your message here..." 
-      className="w-full max-w-4xl min-h-124 text-justify"
+      className="w-full max-w-4xl h-[60vh] text-justify overflow-y-auto"
     />
   )
 }

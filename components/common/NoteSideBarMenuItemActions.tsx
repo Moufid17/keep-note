@@ -45,9 +45,17 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
         startTransitionToUpdateNoteTitle(async() => {
             const error = await updateNoteTitleAction(note.id, noteTitle)
             if (error?.errorMessage) {
-                toast.error(error.errorMessage)
+                toast.error("Note", {
+                    icon: "❌",
+                    position: "top-right",
+                    description: error.errorMessage
+                });
             } else {
-                toast.success("Note renamed successfully")
+                toast.success("Note", {
+                    icon: "✅",
+                    position: "top-right",
+                    description:"Note renamed successfully"
+                });
             }
         })
         if (!isPendingToUpdateNoteTitle) {

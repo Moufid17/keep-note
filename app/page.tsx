@@ -33,7 +33,7 @@ export default async function Home({ searchParams }: Props) {
   });
 
   return (
-    <div className="flex flex-col items-center w-full h-screen">
+    <div className="flex flex-col items-center w-full h-[85vh]">
       <div className="w-full max-w-4xl flex flex-col justify-center gap-4 p-2">
         <div className="flex gap-4 justify-end items-center">
           <AskAIButton />
