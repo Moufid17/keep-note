@@ -9,32 +9,34 @@ import { SidebarTrigger } from "../ui/sidebar";
 async function Header() {
   const user = await getUser();
   return (
-    <header className="relative flex h-24 w-full items-center justify-between bg-popover px-3 sm:px-6 shadow-header-brand-400">
-      <Link href={"/"} className="flex items-center gap-2">
-        {user && (<SidebarTrigger />)}
-        <Image src={"/app.svg"} width={60} height={60} alt="logo" priority className="rounded-full" />
-        <h1 className="flex flex-col pb-1 text-2xl font-semibold leading-6">
-          Keep <span>Notes</span>
-        </h1>
-      </Link>
-      <div className="flex gap-4">
-        {user ? (
-          <LogoutButton />
-        ) : (
-              <>
-                <Button asChild className="sm:block">
-                  <Link href={"/sign-up"} >
-                    Sign Up
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" >
-                  <Link href={"/login"}>
-                    Login
-                  </Link>
-                </Button>
-              </>
-        )}
-        <ModeToggle />
+    <header className="relative flex justify-center h-24 w-full">
+      <div className="absolute flex h-20 mt-4 w-[80%] items-center justify-between px-3 sm:px-6 rounded-2xl border">
+        <Link href={"/"} className="flex items-center gap-2">
+          {user && (<SidebarTrigger />)}
+          <Image src={"/app.svg"} width={60} height={60} alt="logo" priority className="rounded-full" />
+          <h1 className="flex flex-col pb-1 text-2xl font-semibold leading-6">
+            Keep <span>Notes</span>
+          </h1>
+        </Link>
+        <div className="flex gap-4">
+          {user ? (
+            <LogoutButton />
+          ) : (
+                <>
+                  <Button asChild className="sm:block">
+                    <Link href={"/sign-up"} >
+                      Sign Up
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" >
+                    <Link href={"/login"}>
+                      Login
+                    </Link>
+                  </Button>
+                </>
+          )}
+          <ModeToggle />
+        </div>
       </div>
     </header>
   )
