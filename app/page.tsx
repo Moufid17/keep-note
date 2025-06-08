@@ -1,10 +1,10 @@
-import { getUser } from "@/auth/server";
+import AskAIButton from "@/components/common/AskAIButton";
 import HomePage from "@/components/common/HomePage";
 import NewNoteButton from "@/components/common/NewNoteButton";
 import NoteTextArea from "@/components/common/NoteTextArea";
-import { Button } from "@/components/ui/button";
-import { prismaClient } from "@/db/prisma";
 import { generateNoteId } from "@/lib/utils";
+import { prismaClient } from "@/db/prisma";
+import { getUser } from "@/auth/server";
 
 type Props = {
   searchParams: Promise<{
@@ -36,7 +36,7 @@ export default async function Home({ searchParams }: Props) {
     <div className="flex flex-col items-center w-full h-screen">
       <div className="w-full max-w-4xl flex flex-col justify-center gap-4 p-2">
         <div className="flex gap-4 justify-end items-center">
-          <Button>Ask IA</Button>
+          <AskAIButton />
           <NewNoteButton user={user}/>
         </div>
         <NoteTextArea noteId={noteId} startingNoteText={note ? note.text : ""}/>       

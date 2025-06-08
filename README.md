@@ -7,15 +7,16 @@ Use AI to resume your note(s)
 ## Features
 
 - [x] CRUD  note
-- [ ]  Note archiving
+- [x]  Note archiving
     - [x] List of normal notes
-    - [ ] List of notes archived
-- [ ] AI to resume<span style="color: green;"> **[Coming Soon]**</span>
-    - [ ] a note or 
-    - [ ] or a list of notes selected
-- [ ] Pwa
-- [ ] Organize notes with tags or categories.
-- [ ] Search functionality to quickly find notes.
+    - [x] List of notes archived
+- [ ] Search functionality to quickly find notes<span style="color: green;"> **[Coming Soon]**</span>.
+- [ ] AI to ask anything about
+    - [x] a note : Maximum `10 questions Starter Plan`
+    - [ ] a list of notes selected : `unlimited questions` <span style="color: green;"> **[Coming Soon]**</span><span style="color: gold;"> **(Premium version)**</span>
+    - [ ] voice to ask a question <span style="color: green;"> **[Coming Soon]**</span><span style="color: gold;"> **(Premium version)**</span>
+- [ ] <span style="color: SaddleBrown;"> **Mobile app (Pwa)**</span><span style="color: green;"> **[Coming Soon]**</span>
+- [ ] Organize notes with tags or categories<span style="color: green;"> **[Coming Soon]**</span><span style="color: gold;"> **(Premium version)**</span>.
 
 ## Installation & run
 
@@ -34,6 +35,9 @@ Use AI to resume your note(s)
 
     SUPABASE_URL=
     SUPABASE_ANON_KEY=
+
+    # Open IA
+    OPENAI_API_KEY=
 
     # App config (local)
     NEXT_PUBLIC_BASE_URL=http://localhost:3000

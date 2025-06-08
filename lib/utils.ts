@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-type ErrorResponse = {
+export type ErrorResponse = {
   errorMessage: string
 }
 
