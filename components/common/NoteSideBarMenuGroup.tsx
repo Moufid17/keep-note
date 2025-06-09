@@ -24,7 +24,7 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
         setLocalNotes(notes);
     }, [notes]);
 
-    const deleteNoteLocally = (noteId: string) => {
+    const handleRemoveNoteFromCurrentListLocally = (noteId: string) => {
         const updatedNotes = localNotes.filter((note) => note.id !== noteId);
         setLocalNotes((_) => updatedNotes);
         
@@ -49,7 +49,7 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
                         <SidebarMenu>
                             {localNotes.map((note: NoteListSibeBarProps) => 
                                     <NoteSideBarMenuItemActions key={`${note.id}`} note={note}
-                                        onDeleteLocally={() => deleteNoteLocally(note.id)}
+                                        onDeleteLocally={() => handleRemoveNoteFromCurrentListLocally(note.id)}
                                         editingNoteId={editingNoteId}
                                         setEditingNoteId={(id: string|null) => setEditingNoteId(id)}
                                     />

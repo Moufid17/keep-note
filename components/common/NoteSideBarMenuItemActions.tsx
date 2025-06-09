@@ -14,6 +14,7 @@ import useNote from "@/hooks/useNote"
 import NoteDeleteButton from "./NoteDeleteButton"
 import { Button } from "@/components/ui/button"
 import { updateNoteTitleAction } from "@/app/actions/notes"
+import NoteRestoreButton from "./NoteRestoreButton"
 interface INoteSideBar {
     note: NoteListSibeBarProps
     editingNoteId: string|null
@@ -114,7 +115,11 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
                         >
                             <SquarePen /><span>Rename</span>
                         </DropdownMenuItem>
-                        <NoteDeleteButton noteId={note.id} onDeleteLocally={onDeleteLocally} />
+                        { note.isArchived ? 
+                            ((<NoteRestoreButton noteId={note.id} onDeleteLocally={onDeleteLocally} />))
+                        :
+                            (<NoteDeleteButton noteId={note.id} onDeleteLocally={onDeleteLocally} />)
+                        }
                     </DropdownMenuContent>
                 </DropdownMenu>
             </SidebarMenuItem>)

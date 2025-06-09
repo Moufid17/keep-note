@@ -58,14 +58,14 @@ export async function AppSidebar() {
                     <SidebarGroup>
                         <SidebarGroupContent>
                             <SidebarGroupContent>
-                                <NoteSideBarMenuGroup defaultOpen title="Notes" notes={notesMap.unArchivedNotes}/> 
+                                <NoteSideBarMenuGroup defaultOpen title={`Notes (${notesMap.unArchivedNotes.length})`} notes={notesMap.unArchivedNotes}/> 
                             </SidebarGroupContent>
                         </SidebarGroupContent>
                     </SidebarGroup>
                     <SidebarGroup>
                         <SidebarGroupContent>
                             <SidebarGroupContent>
-                                <NoteSideBarMenuGroup title="Notes Archived" notes={notesMap.archivedNotes}/> 
+                                <NoteSideBarMenuGroup title={`Notes Archived (${notesMap.archivedNotes.length})`} notes={notesMap.archivedNotes}/> 
                             </SidebarGroupContent>
                         </SidebarGroupContent>
                     </SidebarGroup>

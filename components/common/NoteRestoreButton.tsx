@@ -22,18 +22,26 @@ interface INoteDeleteButton {
     onDeleteLocally?: () => void
 }
 
-function NoteDeleteButton(props: INoteDeleteButton) {
+function NoteRestoreButton(props: INoteDeleteButton) {
     const { noteId, onDeleteLocally } = props
     const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
 
-    const handleArchiveNote = () => {
+    const handleRestoreNote = () => {
         startTransitionToArchiveNote(async() => {   
-            const error = await updateNoteArchiveAction(noteId, true)
+            const error = await updateNoteArchiveAction(noteId) // Default isArchive=false, so it will restore the note
             if (error?.errorMessage) {
-                toast.error(error.errorMessage)
+                toast.error("Note", {
+                    icon: "❌",
+                    position: "top-right",
+                    description: error.errorMessage
+                });
             } else {
                 onDeleteLocally && onDeleteLocally()
-                toast.success("Note archived successfully")
+                toast.success("Note", {
+                    icon: "✅",
+                    position: "top-right",
+                    description:"Note restore successfully"
+                });
             }
         })
     }
@@ -41,21 +49,21 @@ function NoteDeleteButton(props: INoteDeleteButton) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" className="cursor-pointer w-full text-red-500 hover:text-red-500">
-                    <Trash2 className="py-0"/><span className='text-left'>Archive</span>
+                <Button variant="ghost" className="cursor-pointer w-full text-brand-500 hover:text-brand-500">
+                    <Trash2 className="py-0"/><span className='text-left'>Restore</span>
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                    This action cannot be undone. This will permanently archive this note.
+                    This action cannot be undone. This will restore this note.
                 </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                 <AlertDialogCancel>Ignore</AlertDialogCancel>
-                <AlertDialogAction onClick={handleArchiveNote} disabled={isPendingToArchiveNote} className='bg-red-500  hover:bg-red-500'>
-                    <span className="text-black hover:text-gray-600">Archive</span>
+                <AlertDialogAction onClick={handleRestoreNote} disabled={isPendingToArchiveNote} className='bg-brand-500 text-black hover:bg-brand-500 hover:text-black'>
+                    <span className="text-black">Restore</span>
                 </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
@@ -63,4 +71,4 @@ function NoteDeleteButton(props: INoteDeleteButton) {
     )
 }
 
-export default NoteDeleteButton
+export default NoteRestoreButton
