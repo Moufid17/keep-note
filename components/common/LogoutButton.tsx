@@ -29,6 +29,7 @@ function LogoutButton() {
             disabled={loading}
             asChild
             variant={"outline"}
+            size={"sm"}
         >
             <Link href={"/"}>
                 {loading ? (<Loader2 className="animate-spin" />) : "Logout"}
