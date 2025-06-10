@@ -35,23 +35,23 @@ export default async function HomePage({ searchParams }: Props){
         }
     });
     return (
-        <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset className="overflow-hidden pt-0">
-                <Header />
-                <NoteProvider>
-                    <div className="flex flex-col items-center w-full h-[85vh] mt-12">
-                        <div className="w-full max-w-4xl flex flex-col justify-center gap-4 p-2">
-                            <div className="flex gap-4 justify-end items-center">
-                            <AskAIMenu />
-                            <NewNoteButton user={user}/>
+        <NoteProvider>
+            <SidebarProvider>
+                <AppSidebar />
+                <SidebarInset className="overflow-hidden pt-0">
+                    <Header />
+                        <div className="flex flex-col items-center w-full h-[85vh] mt-12">
+                            <div className="w-full max-w-4xl flex flex-col justify-center gap-4 p-2">
+                                <div className="flex gap-4 justify-end items-center">
+                                    <AskAIMenu />
+                                    <NewNoteButton user={user}/>
+                                </div>
+                                <NoteTextArea noteId={noteId} startingNoteText={note ? note.text : ""}/>       
                             </div>
-                            <NoteTextArea noteId={noteId} startingNoteText={note ? note.text : ""}/>       
                         </div>
-                    </div>
-                    <Toaster richColors/>
-                </NoteProvider>
-            </SidebarInset>
-        </SidebarProvider>
+                        <Toaster richColors/>
+                </SidebarInset>
+            </SidebarProvider>
+        </NoteProvider>
     )
 }
