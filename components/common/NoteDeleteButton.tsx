@@ -32,7 +32,7 @@ function NoteDeleteButton(props: INoteDeleteButton) {
             if (error?.errorMessage) {
                 toast.error(error.errorMessage)
             } else {
-                onDeleteLocally && onDeleteLocally()
+                if(onDeleteLocally) onDeleteLocally()
                 toast.success("Note archived successfully")
             }
         })

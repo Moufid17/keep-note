@@ -117,8 +117,6 @@ const schema = z.object({
     responses: z.array(z.string()).min(0, "At least one response is required"),
 });
 
-type AskAIActionInputParams = z.infer<typeof schema>;
-
 export const askAIAction = async (noteId: string, questions: string[], responses: string[]) => {
     try {
         // Validate inputs

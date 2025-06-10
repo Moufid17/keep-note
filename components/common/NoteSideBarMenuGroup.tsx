@@ -26,7 +26,7 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
 
     const handleRemoveNoteFromCurrentListLocally = (noteId: string) => {
         const updatedNotes = localNotes.filter((note) => note.id !== noteId);
-        setLocalNotes((_) => updatedNotes);
+        setLocalNotes(updatedNotes);
         
         if (updatedNotes.length >= 1) {
             router.replace(`/notes/?noteId=${updatedNotes[0]?.id}`)

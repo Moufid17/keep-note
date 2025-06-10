@@ -39,12 +39,11 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
         }  
     }, [noteId, selectedNoteText, note.id]);
 
-    let noteText = localedNoteText || "EMPTY NOTE";
-    let noteTitle = localNoteTitle || note.text.slice(0, 20);
+    const noteText = localedNoteText || "EMPTY NOTE";
 
     const handleRenameNote = () => {
         startTransitionToUpdateNoteTitle(async() => {
-            const error = await updateNoteTitleAction(note.id, noteTitle)
+            const error = await updateNoteTitleAction(note.id, localNoteTitle)
             if (error?.errorMessage) {
                 toast.error("Note", {
                     icon: "❌",

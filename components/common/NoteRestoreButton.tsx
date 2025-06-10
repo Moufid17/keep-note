@@ -36,7 +36,7 @@ function NoteRestoreButton(props: INoteDeleteButton) {
                     description: error.errorMessage
                 });
             } else {
-                onDeleteLocally && onDeleteLocally()
+                if (onDeleteLocally) onDeleteLocally()
                 toast.success("Note", {
                     icon: "✅",
                     position: "top-right",

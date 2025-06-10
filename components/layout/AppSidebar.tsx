@@ -43,7 +43,11 @@ export async function AppSidebar() {
         archivedNotes : [],
     }
     notesMap = notes.reduce((acc, currentNote) => {
-        currentNote.isArchived ? acc["archivedNotes"].push(currentNote) : acc["unArchivedNotes"].push(currentNote)
+        if (currentNote.isArchived)  {
+            acc["archivedNotes"].push(currentNote)
+        } else {
+            acc["unArchivedNotes"].push(currentNote)
+        }
         return acc
     }, notesMap)
     return (

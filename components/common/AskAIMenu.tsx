@@ -1,6 +1,6 @@
 "use client"
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { notFound, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,21 +20,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { askAIAction } from "@/app/actions/notes";
 import { ErrorResponse } from "@/lib/utils";
 
 function AskAIMenu() {
     const noteIdParam = useSearchParams().get("noteId") || "";
-    if (Array.isArray(noteIdParam)) {
-        toast.warning("Note - Ask AI", {
-            icon: "⚠️",
-            position: "top-right",
-            description:"Invalid note, please ensure to select a valid note."
-        });
-        return;
-    }
+    
     const [oldNoteParamId, setOldNoteParamId] = useState<string>("");
     const [currentQuestion, setCurrentQuestion] = useState<string>("");
     const [questions, setQuestions] = useState<string[]>([]);
@@ -42,7 +35,16 @@ function AskAIMenu() {
     const [openDialog, setOpenDialog] = useState(false);
     const [isNewQuestionAllowed, setIsNewQuestionAllowed] = useState(true);
 
-    const handleAskAIButtonClick = (isOpen: boolean) => {
+    if (Array.isArray(noteIdParam)) {
+        toast.warning("Note - Ask AI", {
+            icon: "⚠️",
+            position: "top-right",
+            description:"Invalid note, please ensure to select a valid note."
+        });
+        notFound();
+    }
+
+    const handleAskAIButtonClick = useCallback((isOpen: boolean) => {
         if (isOpen) {
             // Reset state if the noteId has changed
             if (oldNoteParamId !== noteIdParam) {
@@ -53,7 +55,7 @@ function AskAIMenu() {
             }
         }
         setOpenDialog(isOpen);
-    }
+    }, [oldNoteParamId, noteIdParam]); 
     
     const handleSubmitQuestion = async () => {
         if (noteIdParam.length <= 0) {
@@ -118,19 +120,18 @@ function AskAIMenu() {
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         }
-    }, [])
+    }, [openDialog, handleAskAIButtonClick]);
 
     return (
         <Dialog open={openDialog} onOpenChange={handleAskAIButtonClick}>
             <DropdownMenu>
-                <DropdownMenuTrigger asChild><Button variant={"outline"}>Ask IA</Button></DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild><Button variant={"outline"}>Ask AI<ChevronDown/></Button></DropdownMenuTrigger>
                 <DropdownMenuContent>
                 <DropdownMenuLabel>Options</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DialogTrigger asChild>
-                    <DropdownMenuItem>Ask IA 
-                        <span className="text-gray-600 dark:bg-black border rounded-sm px-1">Ctrl</span>
-                        <span className="text-gray-600 dark:bg-black border rounded-sm px-1">I</span>
+                    <DropdownMenuItem>Ask AI 
+                        <span className="text-gray-600 dark:bg-black border rounded-sm px-1">Ctrl + I</span>
                     </DropdownMenuItem>
                 </DialogTrigger>
                 <DropdownMenuItem disabled>Selects/All<sup className="border p-1.5 rounded-sm  bg-brand-400">Comming soon</sup></DropdownMenuItem>
