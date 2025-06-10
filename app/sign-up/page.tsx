@@ -20,8 +20,19 @@ function SignUp() {
 
         startTransition(async () => {
             const error = await signup(email, password)
-            if (error?.errorMessage) toast.error(error.errorMessage)
-            toast.success("Check your email to verify your account")
+            if (error?.errorMessage) {
+                toast.error("Sign up", {
+                    position: "top-center",
+                    description: error.errorMessage,
+                    duration: 6000,
+                });
+                return;
+            }
+            toast.success("Sign up", {
+                position: "top-center",
+                description:"Check your email to verify your account",
+                duration: 6000,
+            });
             router.replace('/login')
         })
     }
