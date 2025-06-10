@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-type ErrorResponse = {
+export type ErrorResponse = {
   errorMessage: string
 }
 
@@ -14,4 +14,8 @@ export const handleError = (error: unknown) : ErrorResponse => {
     return {errorMessage: error.message}
   }
   return {errorMessage: "An unknown error occurred."}
+}
+
+export const generateNoteId = () : string => {
+  return crypto.randomUUID()
 }

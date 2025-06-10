@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
-import { Toaster } from "@/components/ui/sonner";
-import Header from "@/components/layout/Header";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/layout/AppSidebar";
-import NoteProvider from "@/providers/NoteProvider";
+
 
 
 export const metadata: Metadata = {
@@ -46,23 +42,15 @@ export default function RootLayout({
       <body>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <NoteProvider>
-            <SidebarProvider>
-              <AppSidebar />
-              <div className="flex flex-col min-h-screen w-full">
-                <Header />
-                <main className="flex flex-1 flex-col px-4 pt-10 xl:px-8">
-                  <SidebarTrigger />
-                  {children}
-                </main>
-              </div>
-            </SidebarProvider>
-          </NoteProvider>
-          <Toaster richColors/>
+          <div className="flex flex-col min-h-screen w-full">
+            <main className="flex flex-1 flex-col px-4 xl:px-8">
+              {children}
+            </main>
+          </div>
         </ThemeProvider>
       </body>
     </html>
