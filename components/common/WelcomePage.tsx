@@ -9,7 +9,7 @@ function WelcomePage() {
       <div className='background-image-before absolute z-1 bg-size-[24px_24px] inset-0'></div>
       <WelcomeHeader />
       <section className="relative w-full min-h-[calc(100vh-44px)] flex items-center justify-center px-4 sm:px-8 md:px-12">
-        <div className="relative z-1 flex flex-col items-center gap-4 h-full mask-radial-at-top-left mask-radial-from-100%">
+        <div className="relative z-2 flex flex-col items-center gap-4 h-full mask-radial-at-top-left mask-radial-from-100%">
           <h1 className="typewriter-animation xl:whitespace-nowrap text-2xl lg:text-5xl xl:text-4xl font-bold text-center bg-brand-500 dark:bg-gradient-to-r dark:from-brand-500 dark:to-brand-100 inline-block text-transparent bg-clip-text">
             Capture, Organize, and Summarize Your Ideas Effortlessly.
           </h1>
