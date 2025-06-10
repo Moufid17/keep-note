@@ -11,22 +11,22 @@ export async function createClient() {
         process.env.SUPABASE_URL!,
         process.env.SUPABASE_ANON_KEY!,
         {
-        cookies: {
-            getAll() {
-            return cookieStore.getAll()
+            cookies: {
+                getAll() {
+                    return cookieStore.getAll()
+                },
+                setAll(cookiesToSet) {
+                    try {
+                        cookiesToSet.forEach(({ name, value }) =>
+                            cookieStore.set(name, value)
+                        )
+                    } catch {
+                        // The `setAll` method was called from a Server Component.
+                        // This can be ignored if you have middleware refreshing
+                        // user sessions.
+                    }
+                },
             },
-            setAll(cookiesToSet) {
-            try {
-                cookiesToSet.forEach(({ name, value, options }) =>
-                cookieStore.set(name, value)
-                )
-            } catch {
-                // The `setAll` method was called from a Server Component.
-                // This can be ignored if you have middleware refreshing
-                // user sessions.
-            }
-            },
-        },
         }
     )
 
@@ -46,7 +46,6 @@ export async function getUser() {
     } = await client.auth.getUser()
 
     if (error) {
-        console.log('Error getting user:', error.message)
         return null
     }
     return user
