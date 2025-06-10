@@ -88,6 +88,7 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+  --grid-line-color: oklch(0.977 0.028 133.72);
 }
 
 .dark {
@@ -122,6 +123,7 @@
   --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
+  --grid-line-color: oklch(1 0 0 / 20%);
 }
 
 @layer base {
@@ -181,65 +183,44 @@
   to { width: 100%; }
 }
 
-@keyframes move {
-  25% {
-    transform: translatey(-4vmin);
-  }
-  50% {
-    transform: translatey(-8.5vmin);
-  }
-  75% {
-    transform: translatey(-12.5vmin);
-  }
+
+@keyframes textRoll {
+  0%, 20% { transform: translateY(0); }
+  25%, 45% { transform: translateY(-1.5em); }
+  50%, 70% { transform: translateY(-3em); }
+  75%, 95% { transform: translateY(-4.5em); }
+  100% { transform: translateY(0); }
 }
 
-section#homepage {
+
+#welcomepage {
   /* Background image */
   .background-image-before {
     background-image: 
-      linear-gradient(to bottom, #80808012 1px, transparent 1px),
-      linear-gradient(to left, #80808012 1px, transparent 1px); 
+      linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px),
+      linear-gradient(to left, var(--grid-line-color) 1px, transparent 1px); 
     
       /* Le transparent couvre la couleur précédente qui est considérer comme ignoré */
     -webkit-mask-image: linear-gradient(to bottom right, black 35%, transparent 36%);
     mask-image: linear-gradient(to bottom right, black 35%, transparent 40%);
   }
 
-  .background-image-before {
+  .background-image-after {
     background-image: 
-      linear-gradient(to top, #80808012 1px, transparent 1px),
-      linear-gradient(to right, #80808012 1px, transparent 1px); 
+      linear-gradient(to top, var(--grid-line-color) 1px, transparent 1px),
+      linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px); 
     
     -webkit-mask-image: linear-gradient(to top left, black 15%, transparent 16%);
     mask-image: linear-gradient(to top left, black 15%, transparent 16%);
   }
 
-  /* H1 Text animation */
-  .typewriter-animation {
-    animation: 
-      typewriter 5s steps(35) 1s 1 normal both, 
-  }
-  /* H3 text animation  */
-  .text-roller-animation { animation: move 10s infinite; }
-  .text-roller {
-    position: relative;
-    top: -4vmin;
-    left: 13vmin;
-  }
-  .closure::before {
-    content: '';
-    position: absolute;
-    height: 20vmin;
-    width: 54.5vmin;
-    background: var(--background);
-    transform: translate(-14.2vmin, -39vmin);
-  }
-  .closure::after {
-    content: '';
-    position: absolute;
-    height: 20vmin;
-    width: 54.5vmin;
-    background: var(--background);
-    transform: translate(-14.2vmin, -16.6vmin);
+  section {
+    /* H1 Text animation */
+    .typewriter-animation {
+      animation: 
+        typewriter 5s steps(35) 1s 1 normal both, 
+    }
+    /* H3 text animation  */
+    .animate-text-roll { animation: textRoll 12s ease-in-out infinite; }
   }
 }
