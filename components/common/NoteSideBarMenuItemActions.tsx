@@ -99,7 +99,7 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
          {!isLoading && editingNoteId !== note.id && (
             <SidebarMenuItem>
                 <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer }`}>
-                    <Link href={`/?noteId=${note.id}`} onClick={() => setNoteTitle(localNoteTitle.length > 0 ? localNoteTitle : noteText)}><LoadingIndicator /><p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText}</p></Link>
+                    <Link href={`/notes/?noteId=${note.id}`} onClick={() => setNoteTitle(localNoteTitle.length > 0 ? localNoteTitle : noteText)}><LoadingIndicator /><p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText}</p></Link>
                 </SidebarMenuButton>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

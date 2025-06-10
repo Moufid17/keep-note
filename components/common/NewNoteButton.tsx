@@ -26,7 +26,7 @@ function NewNoteButton({ user }: NewNoteButtonProps) {
             if (error.errorMessage) {
                 toast.error(error?.errorMessage);
             } else {
-                router.push(`/?noteId=${uuid}`);
+                router.push(`/notes/?noteId=${uuid}`);
                 toast.success("Note created successfully");
             }
         }

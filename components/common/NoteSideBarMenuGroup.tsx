@@ -29,7 +29,7 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
         setLocalNotes((_) => updatedNotes);
         
         if (updatedNotes.length >= 1) {
-            router.replace(`/?noteId=${updatedNotes[0]?.id}`)
+            router.replace(`/notes/?noteId=${updatedNotes[0]?.id}`)
         } else {
             router.replace(`/`)
         }
