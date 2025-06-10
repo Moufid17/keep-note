@@ -9,7 +9,7 @@ async function WelcomeHeader() {
   const user = await getUser();
   return (
     <header className="relative flex justify-center h-24 w-full mx-auto">
-      <div className="absolute z-1 flex gap-2 h-20 mt-4 sm:w-full md:w-[90%] items-center justify-between px-3 sm:px-6 rounded-2xl border bg-background shadow-md transition-all duration-300 ease-in-out hover:shadow-lg">
+      <div className="absolute z-2 flex gap-2 h-20 mt-4 sm:w-full md:w-[90%] items-center justify-between px-3 sm:px-6 rounded-2xl border bg-background shadow-md transition-all duration-300 ease-in-out hover:shadow-lg">
         <div className="flex items-center">
           <div>
             <Link href={"/"} className="flex items-center gap-2">
@@ -44,7 +44,7 @@ async function WelcomeHeader() {
                   </Button>
                 </>
           )}
-          <ModeToggle />
+          <ModeToggle/>
         </div>
       </div>
     </header>
