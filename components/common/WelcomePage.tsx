@@ -29,7 +29,7 @@ function WelcomePage() {
               <Link href="/sign-up">Start for free</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/login">Login</Link>
+              <Link href="#">Our Plans</Link>
             </Button>
           </div>
         </div>

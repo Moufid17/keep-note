@@ -32,12 +32,12 @@ async function WelcomeHeader() {
             </>
           ) : (
                 <>
-                  <Button asChild size={"sm"} className="sm:block">
+                  <Button asChild size={"sm"}>
                     <Link href={"/sign-up"} >
                       Sign Up
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" >
+                  <Button asChild variant="outline" size={"sm"}>
                     <Link href={"/login"}>
                       Login
                     </Link>
