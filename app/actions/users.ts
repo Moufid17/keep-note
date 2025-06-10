@@ -21,7 +21,7 @@ export async function login(email: string, password: string) {
 export async function signup(email: string, password: string) {
     try {
         const supabase = await createClient()
-        const { data, error } = await supabase.auth.signUp({ email, password })
+        const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/login` } })
         
         if (error) throw error
         if (!data.user?.id) throw new Error("Error signing up")
