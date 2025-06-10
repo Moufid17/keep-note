@@ -8,15 +8,15 @@ function WelcomePage() {
     <div id="welcomepage" className='relative w-full h-screen overflow-hidden'>
       <div className='background-image-before absolute z-1 bg-size-[24px_24px] inset-0'></div>
       <WelcomeHeader />
-      <section className="relative w-full min-h-screen flex items-center justify-center px-4 sm:px-8 md:px-12">
+      <section className="relative w-full min-h-[calc(100vh-44px)] flex items-center justify-center px-4 sm:px-8 md:px-12">
         <div className="relative z-1 flex flex-col items-center gap-4 h-full mask-radial-at-top-left mask-radial-from-100%">
-          <h1 className="typewriter-animation xl:whitespace-nowrap text-2xl lg:text-5xl font-bold text-center bg-brand-500 dark:bg-gradient-to-r dark:from-brand-500 dark:to-brand-100 inline-block text-transparent bg-clip-text">
+          <h1 className="typewriter-animation xl:whitespace-nowrap text-2xl lg:text-5xl xl:text-4xl font-bold text-center bg-brand-500 dark:bg-gradient-to-r dark:from-brand-500 dark:to-brand-100 inline-block text-transparent bg-clip-text">
             Capture, Organize, and Summarize Your Ideas Effortlessly.
           </h1>
-          <div className='inline-flex items-baseline gap-2 text-xl font-bold h-[1.5em]'>
-            <h3 className={`whitespace-nowrap `}>A simple note-taking app to</h3>
+          <div className='md:inline-flex items-baseline gap-2 text-xl font-bold h-[1.5em]'>
+            <h3 className={`whitespace-nowrap text-center`}>A simple note-taking app to</h3>
             <span className='relative inline-block overflow-hidden h-[1.5em]'>
-              <span className='animate-text-roll block leading-[1.5em]'>
+              <span className='animate-text-roll block sm:text-center md:text-left leading-[1.5em]'>
                 <span className='block text-brand-500'>Capture your thoughts instantly</span>
                 <span className='block text-brand-400'>Organize your notes seamlessly</span>
                 <span className='block text-brand-500'>Summarize your notes easily</span>
