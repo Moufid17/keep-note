@@ -1,5 +1,5 @@
 import React from 'react'
-import { Toaster } from "@/components/ui/sonner";
+
 import NoteProvider from '@/providers/NoteProvider'
 import AskAIMenu from "@/components/common/AskAIMenu";
 import NewNoteButton from "@/components/common/NewNoteButton";
@@ -49,7 +49,7 @@ export default async function HomePage({ searchParams }: Props){
                                 <NoteTextArea noteId={noteId} startingNoteText={note ? note.text : ""}/>       
                             </div>
                         </div>
-                        <Toaster richColors/>
+                        
                 </SidebarInset>
             </SidebarProvider>
         </NoteProvider>

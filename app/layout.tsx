@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/providers/ThemeProvider";
-
+import { Toaster } from "@/components/ui/sonner";
 
 
 export const metadata: Metadata = {
@@ -50,6 +50,7 @@ export default function RootLayout({
             <main className="flex flex-1 flex-col px-4 xl:px-8">
               {children}
             </main>
+            <Toaster richColors/>
           </div>
         </ThemeProvider>
       </body>
