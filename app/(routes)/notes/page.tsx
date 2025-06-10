@@ -20,7 +20,6 @@ type Props = {
 
 export default async function HomePage({ searchParams }: Props){
     const user = await getUser();
-    
     const nodeIdParam = (await searchParams).noteId || "";
     
     let noteId = (Array.isArray(nodeIdParam)) ? nodeIdParam[0] : nodeIdParam;
