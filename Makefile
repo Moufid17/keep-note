@@ -19,9 +19,6 @@ dev:
 build:
 	docker compose exec server npm run build
 
-secret:
-	openssl rand -base64 32
-
 bash:
 	docker compose exec server /bin/sh
 
@@ -36,7 +33,7 @@ dbupdate:
 	docker compose exec server npx prisma migrate dev --create-only  # To create a new migration based on the changes you made to your Prisma schema.
 
 dpm:
-	docker compose exec server npx prisma migrate dev --skip-generate # To create a new migration based on the changes you made to your Prisma schema.
+	docker compose exec server npx prisma migrate dev --name $(name) # To create a new migration based on the changes you made to your Prisma schema.
 
 seed:
 	docker compose exec server npx prisma db seed # To seed the database with some initial data.
