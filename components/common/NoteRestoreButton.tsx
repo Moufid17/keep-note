@@ -31,14 +31,12 @@ function NoteRestoreButton(props: INoteDeleteButton) {
             const error = await updateNoteArchiveAction(noteId) // Default isArchive=false, so it will restore the note
             if (error?.errorMessage) {
                 toast.error("Note", {
-                    icon: "❌",
                     position: "top-right",
                     description: error.errorMessage
                 });
             } else {
                 if (onDeleteLocally) onDeleteLocally()
                 toast.success("Note", {
-                    icon: "✅",
                     position: "top-right",
                     description:"Note restore successfully"
                 });

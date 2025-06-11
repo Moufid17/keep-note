@@ -19,11 +19,22 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
-
+/**
+ * @description
+ * This function is used to update the session for the user.
+ * It checks if the user is logged in, and if not, redirects them to the login page.
+ * If the user is logged in, it checks if they are on an authentication route (login or sign-up).
+ * If they are, it redirects them to the notes page.
+ * If they are not on an authentication route, it checks if they have a noteId in the URL search params.
+ * If they do not, it fetches the newest note for the user and redirects them to that note.
+ * If the user does not have any notes, it creates a new note for them and redirects them to that note.
+ */
 export async function updateSession(request: NextRequest) {
-    let supabaseResponse = NextResponse.next({
-      request,
-    })
+    // Initialize a NextResponse by ussing the request from clent.
+    // This will be used to set cookies in the response later.
+    let supabaseResponse = NextResponse.next({ request, })
+    
+    // Create a Supabase client using the request cookies and set up the cookies to be used in the response.
     const supabase = createServerClient(
       process.env.SUPABASE_URL!,
       process.env.SUPABASE_ANON_KEY!,
@@ -61,19 +72,32 @@ export async function updateSession(request: NextRequest) {
         );
       }
     }
-    
+
     const {searchParams, pathname} = new URL(request.url)
+
+    // If the user is trying to access a noteId in the URL, check if they are logged in
+    // If they are not logged in, redirect them to the login page
+    if (searchParams.get("noteId") && pathname.toLowerCase() === "/notes") {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        return NextResponse.redirect(
+          new URL("/login", process.env.NEXT_PUBLIC_BASE_URL),
+        );
+      }
+    }
     
     if (!searchParams.get("noteId") && pathname.toLowerCase() === "/notes") {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
+        // Retrieve the newest note for the user
         const { newestNoteId } = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/fetch-newest-note?email=${user.email}`,
         ).then((res) => res.json());
-        console.log("newestNoteId", newestNoteId);
-        
         
         if (newestNoteId) {
           const url = request.nextUrl.clone();
@@ -102,6 +126,8 @@ export async function updateSession(request: NextRequest) {
         );
       }
     }
+
+    
     
     return supabaseResponse
   }

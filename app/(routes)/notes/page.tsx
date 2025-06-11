@@ -44,7 +44,7 @@ export default async function HomePage({ searchParams }: Props){
                             <div className="w-full max-w-4xl flex flex-col justify-center gap-4 p-2">
                                 <div className="flex gap-4 justify-end items-center">
                                     <AskAIMenu />
-                                    <NewNoteButton user={user}/>
+                                    <NewNoteButton />
                                 </div>
                                 <NoteTextArea noteId={noteId} startingNoteText={note ? note.text : ""}/>       
                             </div>

@@ -20,8 +20,19 @@ function Login() {
 
         startTransition(async () => {
             const error = await login(email, password)
-            if (error?.errorMessage) toast.error(error.errorMessage)
-            toast.success("Login successful")
+
+            if (error?.errorMessage) {
+                toast.error("Login", {
+                    position: "top-center",
+                    description: error.errorMessage,
+                    duration: 6000,
+                });
+                return;
+            }
+            toast.success("Login", {
+                position: "top-center",
+                description:"Login successful",
+            });
             router.replace('/notes')
         })
 

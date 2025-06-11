@@ -9,7 +9,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import {
   DropdownMenu,
@@ -27,17 +26,18 @@ import { ErrorResponse } from "@/lib/utils";
 
 function AskAIMenu() {
     const noteIdParam = useSearchParams().get("noteId") || "";
+
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
     
     const [oldNoteParamId, setOldNoteParamId] = useState<string>("");
     const [currentQuestion, setCurrentQuestion] = useState<string>("");
     const [questions, setQuestions] = useState<string[]>([]);
     const [responses, setResponses] = useState<string[]>([]);
-    const [openDialog, setOpenDialog] = useState(false);
     const [isNewQuestionAllowed, setIsNewQuestionAllowed] = useState(true);
 
     if (Array.isArray(noteIdParam)) {
         toast.warning("Note - Ask AI", {
-            icon: "⚠️",
             position: "top-right",
             description:"Invalid note, please ensure to select a valid note."
         });
@@ -53,7 +53,7 @@ function AskAIMenu() {
                 setQuestions([]);
                 setResponses([]);
             }
-        }
+        } 
         setOpenDialog(isOpen);
     }, [oldNoteParamId, noteIdParam]); 
     
@@ -61,7 +61,6 @@ function AskAIMenu() {
         if (noteIdParam.length <= 0) {
             setIsNewQuestionAllowed(false);
             toast.error("Note - Ask AI", {
-                icon: "❌",
                 position: "top-right",
                 description:"Please select a valid note to ask questions."
             });
@@ -70,7 +69,6 @@ function AskAIMenu() {
         if (responses.length >= 10) {
             setIsNewQuestionAllowed(false);
             toast.warning("Question limit hit !", {
-                icon: "⚠️",
                 position: "top-right",
                 description:"Maximum of 10 questions reached. Please clear the list to ask more."
             });
@@ -103,12 +101,6 @@ function AskAIMenu() {
         setIsNewQuestionAllowed(value.trim() !== "");
     }
 
-    const handleCloseDialogWithoutCloseButton = (event: KeyboardEvent) => { 
-        // Prevent closing the dialog when clicking outside or pressing escape
-        event.preventDefault()
-        return 
-    }
-
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.ctrlKey && event.key === "I") {
@@ -123,38 +115,30 @@ function AskAIMenu() {
     }, [openDialog, handleAskAIButtonClick]);
 
     return (
-        <Dialog open={openDialog} onOpenChange={handleAskAIButtonClick}>
-            <DropdownMenu>
+        <>
+            <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
                 <DropdownMenuTrigger asChild><Button variant={"outline"}>Ask AI<ChevronDown/></Button></DropdownMenuTrigger>
                 <DropdownMenuContent>
-                <DropdownMenuLabel>Options</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DialogTrigger asChild>
-                    <DropdownMenuItem>Ask AI 
-                        <span className="text-gray-600 dark:bg-black border rounded-sm px-1">Ctrl + I</span>
-                    </DropdownMenuItem>
-                </DialogTrigger>
-                <DropdownMenuItem disabled>Selects/All<sup className="border p-1.5 rounded-sm  bg-brand-400">Comming soon</sup></DropdownMenuItem>
+                    <DropdownMenuLabel>Options</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                        <DropdownMenuItem onSelect={() => {
+                            setIsDropdownOpen(false);
+                            handleAskAIButtonClick(true);
+                        }}>
+                            Ask AI <span className="text-gray-600 dark:bg-black border rounded-sm px-1">Ctrl + I</span>
+                        </DropdownMenuItem>
+                <DropdownMenuItem disabled>Ask AI(Selects/All)<sup className="border p-1.5 rounded-sm  bg-brand-400">Comming soon</sup></DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-            {/* <DialogTrigger asChild>
-                <Button variant={"outline"}>Ask IA</Button>
-            </DialogTrigger> */}
-            <DialogContent className="w-[90vw] md:min-w-2xl lg:min-w-4xl xl:min-w-6xl h-[90vh] overflow-y-auto flex flex-col justify-between items-between"
-                onEscapeKeyDown={handleCloseDialogWithoutCloseButton} 
-                onInteractOutside={(e) => {
-                        e.preventDefault();
-                        return
-                    }
-                }
-            >
-                <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                        This action cannot be undone. This will permanently delete your account
-                        and remove your data from our servers.
-                    </DialogDescription>
-                </DialogHeader>
+            <Dialog open={openDialog} onOpenChange={handleAskAIButtonClick}>
+                <DialogContent className="w-[90vw] md:min-w-2xl lg:min-w-4xl xl:min-w-6xl h-[90vh] overflow-y-auto flex flex-col justify-between items-between"
+                    onEscapeKeyDown={(e) => e.preventDefault()} 
+                    onInteractOutside={(e) => e.preventDefault()}
+                >
+                    <DialogHeader>
+                        <DialogTitle>Ask AI About Your Notes</DialogTitle>
+                        <DialogDescription>Out AI can answer questions about all of your notes</DialogDescription>
+                    </DialogHeader>
                     <div className="overflow-y-auto min-h-fit w-full mb-2">
                         {questions.map((question, index) => (
                             <div key={index} className="mx-6 flex flex-col gap-5 ">
@@ -195,8 +179,9 @@ function AskAIMenu() {
                             </div>
                         </div>
                     </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </DialogContent>
+            </Dialog>
+        </>
     )
 }
 
