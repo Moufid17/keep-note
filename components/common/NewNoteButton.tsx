@@ -1,22 +1,17 @@
 "use client"
 import { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { User } from "@supabase/supabase-js";
 import { useRouter } from 'next/navigation';
 import { createNoteAction } from '@/app/actions/notes';
 import { toast } from 'sonner';
 import { generateNoteId } from '@/lib/utils';
 
-type NewNoteButtonProps = {
-    user: User | null
-}
 
-function NewNoteButton({ user }: NewNoteButtonProps) {
+function NewNoteButton() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     
     const handleClickNewNoteButton = useCallback(async () => {
-
         setIsLoading(true);
 
         const uuid : string = generateNoteId();
@@ -31,7 +26,7 @@ function NewNoteButton({ user }: NewNoteButtonProps) {
         }
         
         setIsLoading(false);
-    }, [user, router]);
+    }, [router]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
