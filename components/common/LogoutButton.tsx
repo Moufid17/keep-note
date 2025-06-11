@@ -15,12 +15,19 @@ function LogoutButton() {
         setLoading(true)
         
         const error = await logout()
-        if (!error?.errorMessage) {
-            toast.success("User logged out successfully")
-            router.push("/")
-        } else {
-            toast.error(error.errorMessage)
+        if (error?.errorMessage) {
+            toast.error("Logout", {
+                position: "top-right",
+                description: error.errorMessage,
+                duration: 6000,
+            });
         }
+        toast.success("Logout", {
+            position: "top-right",
+            description:"User logged out successfully",
+        });
+        router.push("/")
+
         setLoading(false)
     }
     return (
