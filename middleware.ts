@@ -19,11 +19,22 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
-
+/**
+ * @description
+ * This function is used to update the session for the user.
+ * It checks if the user is logged in, and if not, redirects them to the login page.
+ * If the user is logged in, it checks if they are on an authentication route (login or sign-up).
+ * If they are, it redirects them to the notes page.
+ * If they are not on an authentication route, it checks if they have a noteId in the URL search params.
+ * If they do not, it fetches the newest note for the user and redirects them to that note.
+ * If the user does not have any notes, it creates a new note for them and redirects them to that note.
+ */
 export async function updateSession(request: NextRequest) {
-    let supabaseResponse = NextResponse.next({
-      request,
-    })
+    // Initialize a NextResponse by ussing the request from clent.
+    // This will be used to set cookies in the response later.
+    let supabaseResponse = NextResponse.next({ request, })
+
+    // Create a Supabase client using the request cookies and set up the cookies to be used in the response.
     const supabase = createServerClient(
       process.env.SUPABASE_URL!,
       process.env.SUPABASE_ANON_KEY!,
@@ -48,32 +59,40 @@ export async function updateSession(request: NextRequest) {
     const isAuthROute =
       request.nextUrl.pathname.toLowerCase().startsWith('/login') ||
       request.nextUrl.pathname.toLowerCase().startsWith('/sign-up')
+    
+    const isPublicRoute =
+      request.nextUrl.pathname.toLowerCase() == '/'
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
 
     if (isAuthROute) {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
       // user is already logged in, redirect to the dashboard
       if (user) {
         return NextResponse.redirect(
           new URL("/notes", process.env.NEXT_PUBLIC_BASE_URL),
         );
       }
+    } else {
+      if (!user && !isPublicRoute) {
+        // user is not logged in, redirect to the login page
+        return NextResponse.redirect(
+          new URL("/login", process.env.NEXT_PUBLIC_BASE_URL),
+        );
+      } 
     }
     
+
+    // Retreive url search params and pathname
     const {searchParams, pathname} = new URL(request.url)
     
     if (!searchParams.get("noteId") && pathname.toLowerCase() === "/notes") {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
       if (user) {
+        // Retrieve the newest note for the user
         const { newestNoteId } = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/fetch-newest-note?email=${user.email}`,
         ).then((res) => res.json());
-        console.log("newestNoteId", newestNoteId);
-        
         
         if (newestNoteId) {
           const url = request.nextUrl.clone();
@@ -96,10 +115,6 @@ export async function updateSession(request: NextRequest) {
             return NextResponse.redirect(url);
           }
         }
-      } else {
-        return NextResponse.redirect(
-          new URL("/login", process.env.NEXT_PUBLIC_BASE_URL),
-        );
       }
     }
     

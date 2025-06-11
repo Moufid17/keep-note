@@ -16,7 +16,6 @@ function NewNoteButton({ user }: NewNoteButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
     
     const handleClickNewNoteButton = useCallback(async () => {
-        if (!user) router.push("/login");
 
         setIsLoading(true);
 
