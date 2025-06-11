@@ -38,7 +38,6 @@ function AskAIMenu() {
 
     if (Array.isArray(noteIdParam)) {
         toast.warning("Note - Ask AI", {
-            icon: "⚠️",
             position: "top-right",
             description:"Invalid note, please ensure to select a valid note."
         });
@@ -62,7 +61,6 @@ function AskAIMenu() {
         if (noteIdParam.length <= 0) {
             setIsNewQuestionAllowed(false);
             toast.error("Note - Ask AI", {
-                icon: "❌",
                 position: "top-right",
                 description:"Please select a valid note to ask questions."
             });
@@ -71,7 +69,6 @@ function AskAIMenu() {
         if (responses.length >= 10) {
             setIsNewQuestionAllowed(false);
             toast.warning("Question limit hit !", {
-                icon: "⚠️",
                 position: "top-right",
                 description:"Maximum of 10 questions reached. Please clear the list to ask more."
             });

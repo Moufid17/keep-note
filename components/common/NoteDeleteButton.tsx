@@ -30,10 +30,17 @@ function NoteDeleteButton(props: INoteDeleteButton) {
         startTransitionToArchiveNote(async() => {   
             const error = await updateNoteArchiveAction(noteId, true)
             if (error?.errorMessage) {
-                toast.error(error.errorMessage)
+                toast.error("Note", {
+                    position: "top-right",
+                    description: error.errorMessage,
+                    duration: 6000
+                });
             } else {
                 if(onDeleteLocally) onDeleteLocally()
-                toast.success("Note archived successfully")
+                toast.success("Note", {
+                    position: "top-right",
+                    description:"Note archived successfully"
+                });
             }
         })
     }

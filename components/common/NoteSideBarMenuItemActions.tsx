@@ -46,13 +46,11 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
             const error = await updateNoteTitleAction(note.id, localNoteTitle)
             if (error?.errorMessage) {
                 toast.error("Note", {
-                    icon: "❌",
                     position: "top-right",
                     description: error.errorMessage
                 });
             } else {
                 toast.success("Note", {
-                    icon: "✅",
                     position: "top-right",
                     description:"Note renamed successfully"
                 });

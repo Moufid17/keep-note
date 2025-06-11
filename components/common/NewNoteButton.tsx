@@ -18,10 +18,17 @@ function NewNoteButton() {
         const error = await createNoteAction(uuid);
         if (error) {
             if (error.errorMessage) {
-                toast.error(error?.errorMessage);
+                toast.error("Note", {
+                    position: "top-right",
+                    description: error?.errorMessage,
+                    duration: 6000
+                });
             } else {
+                toast.success("Note", {
+                    position: "top-right",
+                    description:"Note created successfully"
+                });
                 router.push(`/notes/?noteId=${uuid}`);
-                toast.success("Note created successfully");
             }
         }
         
