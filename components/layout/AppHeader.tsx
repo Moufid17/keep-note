@@ -49,7 +49,7 @@ const AppHeader = () => {
     }, []);
 
     return (
-        <header className="relative top-0 z-50 w-full ">
+        <header className="relative top-0 z-50 w-full flex justify-center">
             <nav className="absolute z-52 container mx-auto px-3 py-3 sm:w-full md:w-[90%] h-20 mt-4 flex justify-between items-center gap-2 rounded-2xl border bg-background shadow-md transition-all duration-300 ease-in-out hover:shadow-lg">
                 <div className="flex items-center justify-between gap-2">
                     {user && (<SidebarTrigger/>)}
