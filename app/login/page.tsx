@@ -49,7 +49,7 @@ function Login() {
                         <div className='grid w-full items-center gap-y-6'>
                             <div className='flex flex-col gap-y-1.5'>
                                 <Label htmlFor="email">Email</Label>
-                                <Input id="email" name="email" type="text" required disabled={isPending} placeholder='Enter your email' />
+                                <Input autoFocus id="email" name="email" type="text" required disabled={isPending} placeholder='Enter your email' />
                             </div>
                             <div className='flex flex-col gap-y-1.5'>
                                 <Label htmlFor="password">Password</Label>
