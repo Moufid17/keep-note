@@ -2,13 +2,18 @@ import React from 'react'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import WelcomeAppHeader from './WelcomeAppHeader'
+import WelcomePageFeaturesSection from './WelcomePageFeaturesSection'
+import WelcomePageHeroSection from './WelcomePageHeroSection'
+import WelcomePageProcessSection from './WelcomePageProcessSection'
+import WelcomePagePricingSection from './WelcomePagePricingSection'
+import WelcomePageTestimonalSection from './WelcomePageTestimonalSection'
+import WelcomePageCtaSection from './WelcomePageCtaSection'
+import WelcomePageFooter from './WelcomePageFooter'
 
-function WelcomePage() {
+
+const FirstSection = () => {
   return (
-    <div id="welcomepage" className='relative w-full h-screen overflow-hidden'>
-      <div className='background-image-before absolute z-1 bg-size-[24px_24px] inset-0'></div>
-      <WelcomeAppHeader />
-      <section className="relative w-full min-h-[calc(100vh-44px)] flex items-center justify-center px-4 sm:px-8 md:px-12">
+    <section className="relative w-full min-h-[calc(100vh-44px)] flex items-center justify-center px-4 sm:px-8 md:px-12">
         <div className="relative z-2 flex flex-col items-center gap-4 h-full mask-radial-at-top-left mask-radial-from-100%">
           <h1 className="typewriter-animation xl:whitespace-nowrap text-2xl lg:text-5xl xl:text-4xl font-bold text-center bg-brand-500 dark:bg-gradient-to-r dark:from-brand-500 dark:to-brand-100 inline-block text-transparent bg-clip-text">
             Capture, Organize, and Summarize Your Ideas Effortlessly.
@@ -34,6 +39,25 @@ function WelcomePage() {
           </div>
         </div>
       </section>
+  )
+}
+
+function WelcomePage() {
+  return (
+    <div id="welcomepage" className='relative w-full h-screen'>
+      <div className='background-image-before absolute z-1 bg-size-[24px_24px] inset-0'></div>
+      <WelcomeAppHeader />
+      <div className='relative z-2 h-full mt-[44px]'>
+        <WelcomePageHeroSection />
+        <div className='container mx-auto bg-primary/10 dark:bg-primary/20 rounded-2xl'>
+          <WelcomePageFeaturesSection />
+          <WelcomePageProcessSection />
+          <WelcomePagePricingSection />
+          <WelcomePageTestimonalSection />
+          <WelcomePageCtaSection />
+          <WelcomePageFooter />
+        </div>
+      </div>
       <div className='background-image-after absolute z-1 bg-size-[24px_24px] inset-0'></div>
     </div>
   )

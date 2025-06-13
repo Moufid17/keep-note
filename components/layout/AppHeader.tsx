@@ -65,17 +65,19 @@ const AppHeader = () => {
                     <a href="#how-it-works" className="hover:text-primary/80 transition">How It Works</a>
                     <a href="#pricing" className="hover:text-primary/80 transition">Pricing</a>
                 </div>
-                <div className="md:hidden flex justify-between items-center gap-2">
+                <div className='flex items-center justify-between gap-2 md:gap-0'>
                     <ModeToggle/>
-                    <Button id="menu-btn" ref={menuButtonRef} className="focus:outline-none" 
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            const mobileMenuElement = mobileMenuRef.current
-                            if (mobileMenuElement) mobileMenuElement.classList.toggle("hidden")
-                        }}
-                    >
-                        <AlignJustify/>
-                    </Button>
+                    <div className="md:hidden flex justify-between items-center gap-2">
+                        <Button id="menu-btn" ref={menuButtonRef} className="focus:outline-none" 
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                const mobileMenuElement = mobileMenuRef.current
+                                if (mobileMenuElement) mobileMenuElement.classList.toggle("hidden")
+                            }}
+                        >
+                            <AlignJustify/>
+                        </Button>
+                    </div>
                 </div>
                 <div className="hidden md:block">
                     { !isMobile && (
