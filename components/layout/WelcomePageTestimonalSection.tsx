@@ -1,3 +1,4 @@
+import Image from "next/image"
 
 function WelcomePageTestimonalSection() {
     return (
@@ -11,7 +12,7 @@ function WelcomePageTestimonalSection() {
                     {/* Testimonial 1 */}
                     <div className="bg-white p-6 rounded-xl shadow-sm">
                         <div className="flex items-center mb-4">
-                            <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="User" className="w-12 h-12 rounded-full mr-4"/>
+                            <Image src="https://randomuser.me/api/portraits/women/32.jpg" alt="User" width="600" height="24" className="w-12 h-12 rounded-full mr-4"/>
                             <div>
                                 <h4 className="text-black font-semibold">Sarah Johnson</h4>
                                 <p className="text-muted-foreground text-sm">Product Manager</p>
@@ -30,7 +31,7 @@ function WelcomePageTestimonalSection() {
                     {/* Testimonial 2 */}
                     <div className="bg-white p-6 rounded-xl shadow-sm">
                         <div className="flex items-center mb-4">
-                            <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="User" className="w-12 h-12 rounded-full mr-4"/>
+                            <Image src="https://randomuser.me/api/portraits/men/12.jpg" alt="User" width="24" height="24" className="w-12 h-12 rounded-full mr-4"/>
                             <div>
                                 <h4 className="text-black">Michael Chen</h4>
                                 <p className="text-sm text-muted-foreground">Software Engineer</p>
@@ -49,7 +50,7 @@ function WelcomePageTestimonalSection() {
                     {/* Testimonial 3 */}
                     <div className="bg-white p-6 rounded-xl shadow-sm">
                         <div className="flex items-center mb-4">
-                            <img src="https://randomuser.me/api/portraits/women/54.jpg" alt="User" className="w-12 h-12 rounded-full mr-4"/>
+                            <Image src="https://randomuser.me/api/portraits/women/54.jpg" alt="User" width="600" height="24" className="w-12 h-12 rounded-full mr-4"/>
                             <div>
                                 <h4 className="font-semibold">Emily Rodriguez</h4>
                                 <p className="text-muted-foreground text-sm">Student</p>

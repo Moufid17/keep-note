@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "../ui/button";
 import { ModeToggle } from "../common/DarkModeToggle";
 import LogoutButton from "../common/LogoutButton";
-import { AlignJustify, StickerIcon, StickyNote, StickyNoteIcon } from 'lucide-react';
+import { AlignJustify} from 'lucide-react';
 import { getClientUser } from '@/auth/client';
 import { User } from '@supabase/supabase-js';
 import { useIsMobile } from '@/hooks/use-mobile';

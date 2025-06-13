@@ -1,5 +1,5 @@
-import { Bot, Brain, Folder, FolderOpen, Mic, RefreshCcw, Search, Send, Shield, ShieldBan, ShieldHalf, VoteIcon } from 'lucide-react'
 import React from 'react'
+import { Send } from 'lucide-react'
 import { Button } from '../ui/button'
 
 function WelcomePageHeroSection() {

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import React from 'react'
 
 function WelcomePageProcessSection() {
@@ -19,7 +20,7 @@ function WelcomePageProcessSection() {
                                     <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
                                     <div className="w-3 h-3 rounded-full bg-green-500"></div>
                                 </div>
-                                <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="NoteIt App" className="rounded-lg shadow"/>
+                                <Image src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="NoteIt App"  width="600" height="24" className="rounded-lg shadow"/>
                             </div>
                         </div>
                         <div className="absolute -z-10 -bottom-6 -left-6 w-64 h-64 bg-blue-200 rounded-full opacity-30 filter blur-xl"></div>
