@@ -1,3 +1,4 @@
+import { Check, Clock } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -17,25 +18,25 @@ function WelcomePagePricingSection() {
                         <h3 className="text-xl font-semibold mb-2">Free</h3>
                         <p className="text-gray-600 mb-4">Basic features to get started</p>
                         <div className="mb-4">
-                            <span className="text-4xl font-bold">$0</span>
+                            <span className="text-4xl font-bold">0€</span>
                             <span className="text-gray-500">/month</span>
                         </div>
                         <ul className="space-y-2 mb-6">
                             <li className="flex items-center">
-                                <i className="fas fa-check text-green-500 mr-2"></i>
-                                <span>200 AI queries/month</span>
+                                <Check className="text-green-500 mr-2"/>
+                                <span>9 questions AI queries/notes/month</span>
                             </li>
                             <li className="flex items-center">
-                                <i className="fas fa-check text-green-500 mr-2"></i>
+                                <Check className="text-green-500 mr-2"/>
                                 <span>Basic note organization</span>
                             </li>
                             <li className="flex items-center">
-                                <i className="fas fa-check text-green-500 mr-2"></i>
-                                <span>Sync across 2 devices</span>
+                                <Check className=" text-green-500 mr-2"/>
+                                <span>Sync across unlimited devices</span>
                             </li>
                             <li className="flex items-center text-gray-400">
-                                <i className="fas fa-clock text-gray-400 mr-2"></i>
-                                <span>Coming soon: Basic templates</span>
+                                <Clock className="text-gray-400 mr-2"/>
+                                <span>Coming soon: Dictate voice note</span>
                             </li>
                         </ul>
                         <Link href={"/sign-up?plan=free"} className="block w-full border border-primary text-primary hover:bg-primary hover:text-white text-center py-3 rounded-lg transition">
@@ -50,25 +51,29 @@ function WelcomePagePricingSection() {
                         <h3 className="text-xl font-semibold mb-2">Premium</h3>
                         <p className="text-white/80 mb-4">Everything you need for productive notes</p>
                         <div className="mb-4">
-                            <span className="text-4xl font-bold">$9.99</span>
+                            <span className="text-4xl font-bold">5.99€</span>
                             <span className="opacity-80">/month</span>
                         </div>
                         <ul className="space-y-2 mb-6">
                             <li className="flex items-center">
-                                <i className="fas fa-check text-white mr-2"></i>
+                                <Check className=" text-white mr-2"/>
                                 <span>Unlimited AI queries</span>
                             </li>
                             <li className="flex items-center">
-                                <i className="fas fa-check text-white mr-2"></i>
-                                <span>Advanced organization</span>
+                                <Check className=" text-white mr-2"/>
+                                <span>Advanced organization and tags</span>
                             </li>
                             <li className="flex items-center">
-                                <i className="fas fa-check text-white mr-2"></i>
+                                <Check className=" text-white mr-2"/>
                                 <span>Sync across unlimited devices</span>
                             </li>
                             <li className="flex items-center">
-                                <i className="fas fa-check text-white mr-2"></i>
+                                <Check className=" text-white mr-2"/>
                                 <span>Priority access to new features</span>
+                            </li>
+                            <li className="flex items-center text-gray-400">
+                                <Clock className="text-gray-400 mr-2"/>
+                                <span>Coming soon: Dictate voice note</span>
                             </li>
                         </ul>
                         <Link href="/sign-up?plan=premium" className='block w-full bg-white dark:text-black text-primary hover:bg-white/90 text-center px-6 py-3 rounded-sm font-medium transition'>

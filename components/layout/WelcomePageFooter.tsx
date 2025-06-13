@@ -9,7 +9,6 @@ function WelcomePageFooter() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <div className="flex items-center mb-4 gap-2">
-                         {/* <i className="fas fa-sticky-note text-2xl text-primary mr-2"></i> */}
                         <Image src={"/app.svg"} width={30} height={30} alt="logo" priority className="rounded-full" />
                         <span className="text-xl font-bold">NoteIt</span>
                     </div>

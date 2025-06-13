@@ -15,7 +15,6 @@ function WelcomePageFeaturesSection() {
                             <div className="w-12 h-12 bg-brand-100 rounded-full flex items-center justify-center mb-4">
                                 <Brain className="text-brand-600 text-xl size-8"/>
                             </div>
-                            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">Premium</span>
                         </div>
                         <h3 className="text-xl text-black font-semibold mb-2">AI Note Insights</h3>
                         <p className="text-gray-600">Ask questions about your notes and get instant answers from our powerful AI assistant.</p>
@@ -68,7 +67,7 @@ function WelcomePageFeaturesSection() {
                                 <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded">Premium</span>
                         </div>
                         <h3 className="text-xl text-black font-semibold mb-2">AI Summarization</h3>
-                        <p className="text-gray-600">Get concise summaries of long notes or multiple related notes with a single click.</p>
+                        <p className="text-gray-600">Get concise summaries of long notes or <span className='underline'>multiple related notes</span> with a single click.</p>
                     </div>
                     <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition">
                         <div className="flex justify-between items-start">
