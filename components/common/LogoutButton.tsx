@@ -4,16 +4,16 @@ import { Button } from '../ui/button'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { Loader2, LogOut } from 'lucide-react'
 import { logout } from '@/app/actions/users'
 
-function LogoutButton() {
+function LogoutButton({onClick}: { onClick?: () => void }) {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
     const handleLogout = async () => {
         setLoading(true)
-        
+        if (onClick) onClick()
         const error = await logout()
         if (error?.errorMessage) {
             toast.error("Logout", {
@@ -35,12 +35,12 @@ function LogoutButton() {
             onClick={handleLogout}
             disabled={loading}
             asChild
-            variant={"outline"}
-            size={"sm"}
+            size={"icon"}
+            aria-label='Logout'
         >
-            <Link href={"/"}>
-                {loading ? (<Loader2 className="animate-spin" />) : "Logout"}
-            </Link>
+            <div>
+                {loading ? (<Loader2 className="animate-spin" />) : (<LogOut />)}
+            </div>
         </Button>
     )
 }
