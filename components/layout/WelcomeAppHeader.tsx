@@ -19,6 +19,10 @@ const WelcomeAppHeader = () => {
 
     const handleClickInsideMenuDiv = (event: React.MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
+        const mobileMenuElement = mobileMenuRef.current;
+        if (mobileMenuElement) {
+            mobileMenuElement.classList.toggle("hidden");
+        }
     }
 
     const handleClickOutsideMenuDiv = (event: MouseEvent) => {
