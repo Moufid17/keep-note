@@ -32,7 +32,6 @@ export const metadata: Metadata = {
     "note synchronization",
     "note reminders",
   ],
-  themeColor: "#000000",
   openGraph: {
     title: "NoteIt - AI-Powered Note Taking",
     description: "NoteIt combines powerful note-taking with AI assistance. Organize, search, and get insights from your notes effortlessly.",
