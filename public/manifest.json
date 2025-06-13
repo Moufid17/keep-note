@@ -4,14 +4,9 @@
     "description": "NoteIt combines powerful note-taking with AI assistance. Organize, search, and get insights from your notes effortlessly.",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
+    "background_color": "#50bb27",
     "theme_color": "#000000",
     "icons": [
-      {
-        "src": "/favicon.ico",
-        "sizes": "any",
-        "type": "image/x-icon"
-      },
       {
         "src": "/icon-192x192.png",
         "sizes": "192x192",
