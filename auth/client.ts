@@ -6,10 +6,7 @@ import { createBrowserClient } from '@supabase/ssr'
 */
 // This function retreive user
 export async function getClientUser() {
-    // if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
-    //     throw new Error('Missing SUPABASE_URL or SUPABASE_ANON_KEY environment variables');
-    // }
-    const client = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+    const client = createBrowserClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!)
     const {
         data: { user }, error
     } = await client.auth.getUser()
