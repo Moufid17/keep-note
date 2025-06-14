@@ -21,6 +21,14 @@ export async function login(email: string, password: string) {
 export async function signup(email: string, password: string) {
     try {
         const supabase = await createClient()
+        // check if user already exists
+        const existingUser = await prismaClient.user.findUnique({
+            where: { email }
+        })
+        if (existingUser) {
+            return { errorMessage: "User already exists" }
+        }
+        // sign up user
         const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/login` } })
         
         if (error) throw error
