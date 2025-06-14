@@ -23,6 +23,7 @@ import { ArrowUp, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { askAIAction } from "@/app/actions/notes";
 import { ErrorResponse } from "@/lib/utils";
+import VoiceButton from "./VoiceButton";
 
 function AskAIMenu() {
     const noteIdParam = useSearchParams().get("noteId") || "";
@@ -136,7 +137,7 @@ function AskAIMenu() {
                     onInteractOutside={(e) => e.preventDefault()}
                 >
                     <DialogHeader>
-                        <DialogTitle>Ask AI About Your Notes</DialogTitle>
+                        <DialogTitle>Ask AI About Your Note(s)</DialogTitle>
                         <DialogDescription>Out AI can answer questions about all of your notes</DialogDescription>
                     </DialogHeader>
                     <div className="overflow-y-auto min-h-fit w-full mb-2">
@@ -155,7 +156,7 @@ function AskAIMenu() {
                     </div>
                     <DialogFooter>
                         <div className="bg-background w-full">
-                            <div className="relative z-1 flex justify-between items-center w-full">
+                            <div className="flex justify-between items-center gap-2 w-full">
                                 <textarea
                                     value={currentQuestion}
                                     onChange={handleTextAreaInputChange}
@@ -169,12 +170,13 @@ function AskAIMenu() {
                                         }
                                     }
                                 />
-                                <div className="absolute z-2 right-0 top-0 h-full flex items-center p-2">
+                                <div className="h-full flex items-center gap-1">
                                     <Button disabled={!isNewQuestionAllowed || currentQuestion.trim() === ""}
                                         onClick={handleSubmitQuestion}
                                     >
                                         <ArrowUp />
                                     </Button>
+                                    <VoiceButton onNoteClick={(voiceNote:string) =>setCurrentQuestion(voiceNote.trim())}/>
                                 </div>
                             </div>
                         </div>
