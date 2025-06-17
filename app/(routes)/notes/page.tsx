@@ -8,8 +8,8 @@ import { generateNoteId } from "@/lib/utils";
 import { prismaClient } from "@/db/prisma";
 import { getUser } from "@/auth/server";
 import { AppSidebar } from '@/components/layout/AppSidebar';
-import Header from '@/components/layout/Header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import AppHeader from '@/components/layout/AppHeader';
 
 
 type Props = {
@@ -39,17 +39,16 @@ export default async function HomePage({ searchParams }: Props){
             <SidebarProvider>
                 <AppSidebar />
                 <SidebarInset className="overflow-hidden pt-0">
-                    <Header />
-                        <div className="flex flex-col items-center w-full h-[85vh] mt-12">
-                            <div className="w-full max-w-4xl flex flex-col justify-center gap-4 p-2">
-                                <div className="flex gap-4 justify-end items-center">
-                                    <AskAIMenu />
-                                    <NewNoteButton />
-                                </div>
-                                <NoteTextArea noteId={noteId} startingNoteText={note ? note.text : ""}/>       
+                    <AppHeader />
+                    <div className="flex flex-col items-center w-full h-[85vh] mt-34">
+                        <div className="w-full max-w-4xl flex flex-col justify-center gap-4 p-2">
+                            <div className="flex gap-4 justify-end items-center">
+                                <AskAIMenu />
+                                <NewNoteButton />
                             </div>
+                            <NoteTextArea noteId={noteId} startingNoteText={note ? note.text : ""}/>       
                         </div>
-                        
+                    </div>
                 </SidebarInset>
             </SidebarProvider>
         </NoteProvider>

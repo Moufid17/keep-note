@@ -1,4 +1,4 @@
-import WelcomePage from "@/components/common/WelcomePage";
+import WelcomePage from "@/components/layout/WelcomePage";
 
 export default function Page() {
   return ( <WelcomePage /> );
