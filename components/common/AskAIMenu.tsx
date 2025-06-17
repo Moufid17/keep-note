@@ -23,7 +23,6 @@ import { ArrowUp, ChevronDown, Mic } from "lucide-react";
 import { toast } from "sonner";
 import { askAIAction } from "@/app/actions/notes";
 import { ErrorResponse } from "@/lib/utils";
-import VoiceButton from "./VoiceButton";
 
 function AskAIMenu() {
     const noteIdParam = useSearchParams().get("noteId") || "";
