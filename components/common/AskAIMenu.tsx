@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { ArrowUp, ChevronDown } from "lucide-react";
+import { ArrowUp, ChevronDown, Mic } from "lucide-react";
 import { toast } from "sonner";
 import { askAIAction } from "@/app/actions/notes";
 import { ErrorResponse } from "@/lib/utils";
@@ -176,7 +176,9 @@ function AskAIMenu() {
                                     >
                                         <ArrowUp />
                                     </Button>
-                                    <VoiceButton />
+                                    <Button disabled >
+                                        <Mic size="20" />
+                                    </Button>
                                 </div>
                             </div>
                         </div>
