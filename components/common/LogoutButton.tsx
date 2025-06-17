@@ -1,7 +1,6 @@
 "use client"
 import {useState} from 'react'
 import { Button } from '../ui/button'
-import Link from 'next/link'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Loader2, LogOut } from 'lucide-react'

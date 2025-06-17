@@ -176,7 +176,7 @@ function AskAIMenu() {
                                     >
                                         <ArrowUp />
                                     </Button>
-                                    <VoiceButton onNoteClick={(voiceNote:string) =>setCurrentQuestion(voiceNote.trim())}/>
+                                    <VoiceButton />
                                 </div>
                             </div>
                         </div>
