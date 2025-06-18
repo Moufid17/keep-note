@@ -19,10 +19,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { ArrowUp, ChevronDown, Mic } from "lucide-react";
+import { ArrowUp, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { askAIAction } from "@/app/actions/notes";
 import { ErrorResponse } from "@/lib/utils";
+import VoiceButton from "./VoiceButton";
 
 function AskAIMenu() {
     const noteIdParam = useSearchParams().get("noteId") || "";
@@ -175,9 +176,7 @@ function AskAIMenu() {
                                     >
                                         <ArrowUp />
                                     </Button>
-                                    <Button disabled >
-                                        <Mic size="20" />
-                                    </Button>
+                                    <VoiceButton onNoteClick={(voiceNote:string) =>setCurrentQuestion(voiceNote.trim())}/>
                                 </div>
                             </div>
                         </div>
