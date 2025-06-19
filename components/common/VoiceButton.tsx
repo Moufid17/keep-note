@@ -11,6 +11,9 @@ function VoiceButton({onNoteClick}: {onNoteClick?: (voiceNote: string) => void})
             disabled={!isSupportRecognition}
             onMouseDown={startListening}
             onMouseUp= {stopListening}
+            onTouchStart={startListening}
+            onTouchEnd={stopListening}
+            onTouchCancel={stopListening}
         >
             <Mic size="20" className={`${isListening && "animate-bounce"}`} />
         </Button>
