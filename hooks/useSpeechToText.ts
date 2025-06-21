@@ -20,6 +20,7 @@ const useSpeechToText = (setNote?: (voiceNote:string) => void) => {
     const recognition = new SpeechRecognition();
     recognition.lang = "fr-FR";
     recognition.interimResults = false;
+    recognition.continuous = true
 
     // Handle when recognition ends successfully
     recognition.onresult = (event: SpeechRecognitionEvent) => {
