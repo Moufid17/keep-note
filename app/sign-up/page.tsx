@@ -68,6 +68,9 @@ function SignUp() {
                             <p className='text-center text-sm text-muted-foreground'>
                                 Already have an account? <Link href="/login" className='text-brand-300 hover:underline'>Login</Link>
                             </p>
+                            <p className='text-center text-sm text-muted-foreground'>
+                               Go to <Link href="/" className='text-brand-300 hover:underline'>Home page</Link>
+                            </p>
                         </div>
                     </CardFooter>
                 </form>
