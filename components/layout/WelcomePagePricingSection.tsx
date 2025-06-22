@@ -51,7 +51,7 @@ function WelcomePagePricingSection() {
                         <h3 className="text-xl font-semibold mb-2">Premium</h3>
                         <p className="text-white/80 mb-4">Everything you need for productive notes</p>
                         <div className="mb-4">
-                            <span className="text-4xl font-bold">5.99€</span>
+                            <span className="text-4xl font-bold">2.99€</span>
                             <span className="opacity-80">/month</span>
                         </div>
                         <ul className="space-y-2 mb-6">
