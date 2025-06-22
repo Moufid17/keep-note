@@ -14,21 +14,21 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button'
-import { updateNoteArchiveAction } from '@/app/actions/notes'
+import { deleteNoteAction, updateNoteArchiveAction } from '@/app/actions/notes'
   
 
 interface INoteDeleteButton {
     noteId: string
-    onDeleteLocally?: () => void
+    onRemoveFromList?: () => void
 }
 
 function NoteDeleteButton(props: INoteDeleteButton) {
-    const { noteId, onDeleteLocally } = props
+    const { noteId, onRemoveFromList } = props
     const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
 
-    const handleArchiveNote = () => {
+    const handleDeleteNote = () => {
         startTransitionToArchiveNote(async() => {   
-            const error = await updateNoteArchiveAction(noteId, true)
+            const error = await deleteNoteAction(noteId)
             if (error?.errorMessage) {
                 toast.error("Note", {
                     position: "top-right",
@@ -36,10 +36,10 @@ function NoteDeleteButton(props: INoteDeleteButton) {
                     duration: 6000
                 });
             } else {
-                if(onDeleteLocally) onDeleteLocally()
+                if(onRemoveFromList) onRemoveFromList()
                 toast.success("Note", {
                     position: "top-right",
-                    description:"Note archived successfully"
+                    description:"Note delete successfully"
                 });
             }
         })
@@ -49,21 +49,21 @@ function NoteDeleteButton(props: INoteDeleteButton) {
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 <Button variant="ghost" className="cursor-pointer w-full text-red-500 hover:text-red-500">
-                    <Trash2 className="py-0"/><span className='text-left'>Archive</span>
+                    <Trash2 className="py-0"/><span className='text-left'>Delete</span>
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                    This action cannot be undone. This will permanently archive this note.
-                </AlertDialogDescription>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete this note.
+                    </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                <AlertDialogCancel>Ignore</AlertDialogCancel>
-                <AlertDialogAction onClick={handleArchiveNote} disabled={isPendingToArchiveNote} className='bg-red-500  hover:bg-red-500'>
-                    <span className="text-black hover:text-gray-600">Archive</span>
-                </AlertDialogAction>
+                    <AlertDialogCancel>Ignore</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDeleteNote} disabled={isPendingToArchiveNote} className='bg-red-500  hover:bg-red-500'>
+                        <span className="text-black hover:text-gray-600">Delete</span>
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

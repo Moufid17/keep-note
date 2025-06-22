@@ -24,11 +24,12 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
         setLocalNotes(notes);
     }, [notes]);
 
-    const handleRemoveNoteFromCurrentListLocally = (noteId: string) => {
+    const handleRemoveNoteFromCurrentLocalList = (noteId: string) => {
         const updatedNotes = localNotes.filter((note) => note.id !== noteId);
         setLocalNotes(updatedNotes);
         
-        if (updatedNotes.length >= 1) {
+        if (updatedNotes.length >= 1 && updatedNotes[0]?.isArchived === false) {
+            // Redirect to the first note in the list if it exists and is not archived
             router.replace(`/notes/?noteId=${updatedNotes[0]?.id}`)
         } else {
             router.replace(`/notes`)
@@ -49,7 +50,7 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
                         <SidebarMenu>
                             {localNotes.map((note: NoteListSibeBarProps) => 
                                     <NoteSideBarMenuItemActions key={`${note.id}`} note={note}
-                                        onDeleteLocally={() => handleRemoveNoteFromCurrentListLocally(note.id)}
+                                        onRemoveLocally={() => handleRemoveNoteFromCurrentLocalList(note.id)}
                                         editingNoteId={editingNoteId}
                                         setEditingNoteId={(id: string|null) => setEditingNoteId(id)}
                                     />

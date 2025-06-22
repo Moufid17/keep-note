@@ -1,6 +1,6 @@
 "use client"
 import { useTransition } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Archive, Trash2 } from 'lucide-react'
 import { toast } from "sonner"
 import {
     AlertDialog,
@@ -17,28 +17,29 @@ import { Button } from '@/components/ui/button'
 import { updateNoteArchiveAction } from '@/app/actions/notes'
   
 
-interface INoteDeleteButton {
+interface INoteArchiveButton {
     noteId: string
     onRemoveFromList?: () => void
 }
 
-function NoteRestoreButton(props: INoteDeleteButton) {
+function NoteArchiveButton(props: INoteArchiveButton) {
     const { noteId, onRemoveFromList } = props
     const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
 
-    const handleRestoreNote = () => {
+    const handleArchiveNote = () => {
         startTransitionToArchiveNote(async() => {   
-            const error = await updateNoteArchiveAction(noteId) // Default isArchive=false, so it will restore the note
+            const error = await updateNoteArchiveAction(noteId, true)
             if (error?.errorMessage) {
                 toast.error("Note", {
                     position: "top-right",
-                    description: error.errorMessage
+                    description: error.errorMessage,
+                    duration: 6000
                 });
             } else {
-                if (onRemoveFromList) onRemoveFromList()
+                if(onRemoveFromList) onRemoveFromList()
                 toast.success("Note", {
                     position: "top-right",
-                    description:"Note restore successfully"
+                    description:"Note archived successfully"
                 });
             }
         })
@@ -47,21 +48,21 @@ function NoteRestoreButton(props: INoteDeleteButton) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" className="cursor-pointer w-full text-brand-500 hover:text-brand-500">
-                    <Trash2 className="py-0"/><span className='text-left'>Restore</span>
+                <Button variant="ghost" className="cursor-pointer w-full text-orange-500 hover:text-orange-500">
+                    <Archive className="py-0"/><span className='text-left'>Archive</span>
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                    This action cannot be undone. This will restore this note.
+                    This action cannot be undone. This will permanently archive this note.
                 </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                 <AlertDialogCancel>Ignore</AlertDialogCancel>
-                <AlertDialogAction onClick={handleRestoreNote} disabled={isPendingToArchiveNote} className='bg-brand-500 text-black hover:bg-brand-500 hover:text-black'>
-                    <span className="text-black">Restore</span>
+                <AlertDialogAction onClick={handleArchiveNote} disabled={isPendingToArchiveNote} className='bg-orange-500  hover:bg-orange-500'>
+                    <span className="text-black hover:text-gray-600">Archive</span>
                 </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
@@ -69,4 +70,4 @@ function NoteRestoreButton(props: INoteDeleteButton) {
     )
 }
 
-export default NoteRestoreButton
+export default NoteArchiveButton

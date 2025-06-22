@@ -15,16 +15,17 @@ import NoteDeleteButton from "./NoteDeleteButton"
 import { Button } from "@/components/ui/button"
 import { updateNoteTitleAction } from "@/app/actions/notes"
 import NoteRestoreButton from "./NoteRestoreButton"
+import NoteArchiveButton from "./NoteArchiveButton"
 interface INoteSideBar {
     note: NoteListSibeBarProps
     editingNoteId: string|null
     setEditingNoteId: (id: string|null) => void
-    onDeleteLocally?: () => void
+    onRemoveLocally?: () => void
 }
 
 const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
     const noteId = useSearchParams().get("noteId") ?? ""
-    const { note, editingNoteId, setEditingNoteId, onDeleteLocally } = props
+    const { note, editingNoteId, setEditingNoteId, onRemoveLocally } = props
     
     const { noteText: selectedNoteText } = useNote();
     const [localedNoteText, setLocaleNoteText] = useState<string>(note.text)
@@ -113,10 +114,11 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
                             <SquarePen /><span>Rename</span>
                         </DropdownMenuItem>
                         { note.isArchived ? 
-                            ((<NoteRestoreButton noteId={note.id} onDeleteLocally={onDeleteLocally} />))
+                            ((<NoteRestoreButton noteId={note.id} onRemoveFromList={onRemoveLocally} />))
                         :
-                            (<NoteDeleteButton noteId={note.id} onDeleteLocally={onDeleteLocally} />)
+                            (<NoteArchiveButton noteId={note.id} onRemoveFromList={onRemoveLocally} />)
                         }
+                        <NoteDeleteButton noteId={note.id} onRemoveFromList={onRemoveLocally} />
                     </DropdownMenuContent>
                 </DropdownMenu>
             </SidebarMenuItem>)
