@@ -4,7 +4,7 @@ import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu } fro
 import NoteSideBarMenuItemActions from "@/components/common/NoteSideBarMenuItemActions"
 import { ChevronDown } from "lucide-react"
 import { NoteListSibeBarProps } from "@/components/layout/AppSidebar"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 
 type NoteSideBarMenuGroupProps = {
@@ -17,18 +17,18 @@ type NoteSideBarMenuGroupProps = {
 const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
     const router = useRouter();
     const { title, notes, defaultOpen } = props
-    const [localNotes, setLocalNotes] = useState(notes);
+    const [localNotes, setLocalNotes] = useState<NoteListSibeBarProps[]>(notes);
     const [editingNoteId, setEditingNoteId] = useState<string|null>(null);
 
-    useEffect(() => {
-        setLocalNotes(notes);
-    }, [notes]);
+    if (notes !== localNotes) {
+        setLocalNotes(notes);       
+    }
 
     const handleRemoveNoteFromCurrentLocalList = (noteId: string) => {
         const updatedNotes = localNotes.filter((note) => note.id !== noteId);
         setLocalNotes(updatedNotes);
         
-        if (updatedNotes.length >= 1 && updatedNotes[0]?.isArchived === false) {
+        if (updatedNotes.length >= 1 && !updatedNotes[0].isArchived === false) {
             // Redirect to the first note in the list if it exists and is not archived
             router.replace(`/notes/?noteId=${updatedNotes[0]?.id}`)
         } else {
