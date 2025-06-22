@@ -1,5 +1,5 @@
 import React from 'react'
-import { Send } from 'lucide-react'
+import { Mic, Send } from 'lucide-react'
 import { Button } from '../ui/button'
 
 function WelcomePageHeroSection() {
@@ -7,11 +7,21 @@ function WelcomePageHeroSection() {
         <section className="container mx-auto px-4 py-16 md:py-24 mb-34">
             <div className="flex flex-col md:flex-row items-center h-full">
                 <div className="md:w-1/2 mb-10 md:mb-0 md:pr-8">
-                    <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+                    {/* <h1 className="typewriter-animation xl:whitespace-nowrap text-4xl md:text-5xl font-bold leading-tight mb-6"> */}
+                    <h1 className="typewriter-animation xl:whitespace-nowrap text-4xl md:text-5xl font-bold text-left inline-block mb-6">
                         Your Notes, <span className="gradient-text">Smarter</span> Than Ever
                     </h1>
-                    <p className="text-lg mb-8">
-                        NoteIt combines powerful note-taking with AI assistance. Organize, search, and get insights from your notes effortlessly.
+                    <p className="text-3xl mb-4">
+                        {/* NoteIt combines powerful note-taking with AI assistance. Organize, search, and get insights from your notes effortlessly. */}
+                        NoteIt combines powerful <span className='underline'>speech note-taking</span> with <span className='underline'>AI assistance</span>.
+                    </p>
+                    <p className='relative inline-block font-bold overflow-hidden h-[1.5em] mb-8 text-2xl'>
+                        <span className='animate-text-roll block sm:text-center md:text-left leading-[1.5em]'>
+                            <span className='block'><span className="text-brand-500">Express </span>your thoughts effortlessly.</span>
+                            <span className='block'><span className="text-brand-500">Organize </span>your notes seamlessly.</span>
+                            <span className='block'><span className="text-brand-500">Summarize </span>your notes easily with ai.</span>
+                            <span className='block'><span className="text-brand-500">Access </span>them anywhere.</span>
+                        </span>
                     </p>
                     <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
                         <Button asChild size="lg" className="bg-brand-500 hover:bg-brand-500/90 px-6 h-[50px] font-extrabold transition">
@@ -51,8 +61,11 @@ function WelcomePageHeroSection() {
                             </div>
                             <div className="mt-4 flex">
                                 <input type="text" autoFocus placeholder="Ask AI about your notes..." className="w-full flex-1 border border-black rounded-l-lg px-1.5 md:px-4 py-2 text-black/90"/>
-                                <button className="bg-black hover:bg-black/90 text-white px-1 md:px-4 rounded-r-lg transition">
+                                <button className="bg-black hover:bg-black/90 text-white px-1 md:px-2 rounded-r-lg transition">
                                     <Send/>
+                                </button>
+                                <button className="bg-black hover:bg-black/90 text-white px-1 md:px-2 rounded-l-lg transition">
+                                    <Mic />
                                 </button>
                             </div>
                         </div>
