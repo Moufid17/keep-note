@@ -37,7 +37,7 @@ export default async function HomePage({ searchParams }: Props){
     return (
         <NoteProvider>
             <SidebarProvider>
-                <AppSidebar />
+                <AppSidebar user={user}/>
                 <SidebarInset className="overflow-hidden pt-0">
                     <AppHeader />
                     <div className="flex flex-col items-center w-full h-[85vh] mt-34">

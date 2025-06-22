@@ -1,16 +1,17 @@
+
+"use client"
+import Fuse from "fuse.js"
 import {
     Sidebar,
-    SidebarContent,
     SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
     SidebarHeader,
 } from "@/components/ui/sidebar"
 
-import { prismaClient } from "@/db/prisma"
-import { getUser } from "@/auth/server"
-import Link from "next/link"
-import NoteSideBarMenuGroup from "@/components/common/NoteSideBarMenuGroup"
+import { Input } from "../ui/input"
+import { User } from "@supabase/supabase-js"
+import { ChangeEvent, useEffect, useState } from "react"
+import { toast } from "sonner"
+import { AppSidebarContent } from "./AppSidebarContent"
 
 
 export type NoteListSibeBarProps = {
@@ -20,61 +21,59 @@ export type NoteListSibeBarProps = {
     isArchived: boolean
 }
 
-export async function AppSidebar() {
-    const user = await getUser();
+export function AppSidebar({user}: {user: User | null}) {
+    
+    const [initialNotes, setInitialNotes] = useState<NoteListSibeBarProps[]>([])
+    const [localNotes, setLocalNotes] = useState<NoteListSibeBarProps[]>([])
+    const [searchQuery, setSearchQuery] = useState<string>("")
 
     if (!user) return <></>
 
-    let notes: NoteListSibeBarProps[] = []
-    notes = await prismaClient.note.findMany({
-        where: { author: {email: user.email}, },
-        select: {
-            id: true,
-            title: true,
-            text: true,
-            isArchived: true,
-        },
-        orderBy: {
-            createdAt: "desc",
-        },
-    })
-    let notesMap: Record<string, NoteListSibeBarProps[]> = {
-        unArchivedNotes : [],
-        archivedNotes : [],
+    useEffect(() => {
+        let ignore = false
+        fetch(`/api/notes?email=${user.email}`).then(async (res) => {
+            const data = await res.json()
+            if (!ignore) {
+                setInitialNotes(data.notes || [])
+                setLocalNotes(data.notes || [])
+            }
+        }).catch((error) => {
+            toast.error("Fetching notes", {
+                position: "top-center",
+                description: error.Message,
+                duration: 6000,
+            });
+        })
+        return () => { ignore = true; };
+    }, [user, user.email])
+
+    const fuseOptions = {
+        keys: ["title"],
+        threshold: 0.2,
     }
-    notesMap = notes.reduce((acc, currentNote) => {
-        if (currentNote.isArchived)  {
-            acc["archivedNotes"].push(currentNote)
+    const fuse = new Fuse(localNotes, fuseOptions);
+    
+    const handleFilterNotes = (event: ChangeEvent<HTMLInputElement>) => {
+        const query = event.target.value.trim().toLowerCase()
+        setSearchQuery(query)
+        if (query.length > 0) {
+            const results = fuse.search(query)
+            setLocalNotes(results.map(result => result.item))
         } else {
-            acc["unArchivedNotes"].push(currentNote)
+            setLocalNotes(initialNotes)
         }
-        return acc
-    }, notesMap)
+    }
+
     return (
         <Sidebar>
             <SidebarHeader>
-                <div className="flex items-center justify-between px-4 py-2">
-                    {!user && <p> <Link href="/login" className="underline">Login</Link>{" "} to see your notes </p> }
+                <div className="flex items-center justify-between px-1 py-2">
+                    <Input autoFocus type="text" placeholder="Search note(s)" className='placeholder:italic' 
+                        value={searchQuery} onChange={handleFilterNotes}
+                    />
                 </div>
             </SidebarHeader>
-            {user && (
-                <SidebarContent>
-                    <SidebarGroup>
-                        <SidebarGroupContent>
-                            <SidebarGroupContent>
-                                <NoteSideBarMenuGroup defaultOpen title={`Notes (${notesMap.unArchivedNotes.length})`} notes={notesMap.unArchivedNotes}/> 
-                            </SidebarGroupContent>
-                        </SidebarGroupContent>
-                    </SidebarGroup>
-                    <SidebarGroup>
-                        <SidebarGroupContent>
-                            <SidebarGroupContent>
-                                <NoteSideBarMenuGroup title={`Notes Archived (${notesMap.archivedNotes.length})`} notes={notesMap.archivedNotes}/> 
-                            </SidebarGroupContent>
-                        </SidebarGroupContent>
-                    </SidebarGroup>
-                </SidebarContent>
-            )}
+            <AppSidebarContent key={localNotes.length} notes={localNotes} />
             <SidebarFooter />
         </Sidebar>
     )
