@@ -14,7 +14,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button'
-import { deleteNoteAction, updateNoteArchiveAction } from '@/app/actions/notes'
+import { deleteNoteAction } from '@/app/actions/notes'
   
 
 interface INoteDeleteButton {

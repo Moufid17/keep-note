@@ -1,6 +1,6 @@
 "use client"
 import { useTransition } from 'react'
-import { Archive, Trash2 } from 'lucide-react'
+import { Archive } from 'lucide-react'
 import { toast } from "sonner"
 import {
     AlertDialog,
