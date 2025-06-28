@@ -29,15 +29,15 @@ export function AppSidebarContent({ notes }: { notes: NoteListSibeBarProps[] }) 
     }, notesMap)
     
     return (
-        <SidebarContent>
-            <SidebarGroup>
+        <SidebarContent >
+            <SidebarGroup className="py-0">
                 <SidebarGroupContent>
                     <SidebarGroupContent>
                         <NoteSideBarMenuGroup key={notesMap.unArchivedNotes.length} defaultOpen title={`Notes (${notesMap.unArchivedNotes.length})`} notes={notesMap.unArchivedNotes}/> 
                     </SidebarGroupContent>
                 </SidebarGroupContent>
             </SidebarGroup>
-            <SidebarGroup>
+            <SidebarGroup className="py-0">
                 <SidebarGroupContent>
                     <SidebarGroupContent>
                         <NoteSideBarMenuGroup key={notesMap.archivedNotes.length} title={`Notes Archived (${notesMap.archivedNotes.length})`} notes={notesMap.archivedNotes}/> 

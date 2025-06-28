@@ -3,7 +3,6 @@
 import Fuse from "fuse.js"
 import {
     Sidebar,
-    SidebarFooter,
     SidebarHeader,
 } from "@/components/ui/sidebar"
 
@@ -72,7 +71,6 @@ export function AppSidebar({user}: {user: User}) {
                 </div>
             </SidebarHeader>
             <AppSidebarContent key={localNotes.length} notes={localNotes} />
-            <SidebarFooter />
         </Sidebar>
     )
 }
