@@ -21,13 +21,11 @@ export type NoteListSibeBarProps = {
     isArchived: boolean
 }
 
-export function AppSidebar({user}: {user: User | null}) {
+export function AppSidebar({user}: {user: User}) {
     
     const [initialNotes, setInitialNotes] = useState<NoteListSibeBarProps[]>([])
     const [localNotes, setLocalNotes] = useState<NoteListSibeBarProps[]>([])
     const [searchQuery, setSearchQuery] = useState<string>("")
-
-    if (!user) return <></>
 
     useEffect(() => {
         let ignore = false
@@ -51,7 +49,7 @@ export function AppSidebar({user}: {user: User | null}) {
         keys: ["title"],
         threshold: 0.2,
     }
-    const fuse = new Fuse(localNotes, fuseOptions);
+    const fuse = new Fuse(initialNotes, fuseOptions);
     
     const handleFilterNotes = (event: ChangeEvent<HTMLInputElement>) => {
         const query = event.target.value.trim().toLowerCase()

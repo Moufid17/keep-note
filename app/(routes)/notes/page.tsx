@@ -10,6 +10,7 @@ import { getUser } from "@/auth/server";
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import AppHeader from '@/components/layout/AppHeader';
+import { redirect } from 'next/navigation'
 
 
 type Props = {
@@ -20,6 +21,8 @@ type Props = {
 
 export default async function HomePage({ searchParams }: Props){
     const user = await getUser();
+    if (!user) redirect('/login')
+        
     const nodeIdParam = (await searchParams).noteId || "";
     
     let noteId = (Array.isArray(nodeIdParam)) ? nodeIdParam[0] : nodeIdParam;
@@ -34,10 +37,11 @@ export default async function HomePage({ searchParams }: Props){
             text: true,
         }
     });
+
     return (
         <NoteProvider>
             <SidebarProvider>
-                <AppSidebar user={user}/>
+                <AppSidebar key={user.id} user={user}/>
                 <SidebarInset className="overflow-hidden pt-0">
                     <AppHeader />
                     <div className="flex flex-col items-center w-full h-[85vh] mt-34">
