@@ -11,9 +11,6 @@ import { useState } from "react";
 
 export function AppSidebarContent({ notes }: { notes: NoteListSibeBarProps[] }) {
     const [localNotes, setLocalNotes] = useState<NoteListSibeBarProps[]>(notes);
-    if (!notes || notes.length === 0) {
-        return <></>
-    }
     if (notes !== localNotes) {
         setLocalNotes(notes);
     }
