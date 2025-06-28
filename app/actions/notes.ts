@@ -2,10 +2,10 @@
 import { getUser } from '@/auth/server';
 import { prismaClient } from '@/db/prisma'
 import { handleError } from '@/lib/utils';
+import { schemaNoteAskAIAction } from '@/types/notes';
 
 import {OpenAI} from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
-import { z } from "zod";
 
 export const createNoteAction = async (noteId: string) => {
     try {
@@ -111,16 +111,10 @@ export const deleteNoteAction = async (noteId: string) => {
     }
 };
 
-const schema = z.object({
-    noteId: z.string().min(1, "Note ID is required"),
-    questions: z.array(z.string().min(1, "Question must not be empty")).min(1, "At least one question is required"),
-    responses: z.array(z.string()).min(0, "At least one response is required"),
-});
-
 export const askAIAction = async (noteId: string, questions: string[], responses: string[]) => {
     try {
         // Validate inputs
-        const parsedData = schema.safeParse({ noteId, questions, responses });
+        const parsedData = schemaNoteAskAIAction.safeParse({ noteId, questions, responses });
         if (!parsedData.success) {
             const errorMessages = parsedData.error.errors.map(err => err.message).join(", ");
             throw new Error(`Validation failed: ${errorMessages}`);
@@ -128,7 +122,6 @@ export const askAIAction = async (noteId: string, questions: string[], responses
         noteId = parsedData.data.noteId;
         questions = parsedData.data.questions;
         responses = parsedData.data.responses;
-        // if (noteId.length <= 0 || questions.length <= 0 || responses.length <= 0) throw new Error("Note ID is required or questions/responses are empty");
 
         const user = await getUser();
         if (!user) throw new Error("You must be logged in to ask AI");
@@ -141,10 +134,6 @@ export const askAIAction = async (noteId: string, questions: string[], responses
         });
     
         if (!note) {
-            console.log(`Note with ID ${noteId} not found for user ${user.email}`);
-            console.log(`NOtes details:`, note);
-            
-            
             throw new Error("Note not found")
         };
 
