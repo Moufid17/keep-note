@@ -9,56 +9,42 @@ import {
 import { Input } from "../ui/input"
 import { User } from "@supabase/supabase-js"
 import { ChangeEvent, useEffect, useState } from "react"
-import { toast } from "sonner"
 import { AppSidebarContent } from "./AppSidebarContent"
-import { NoteTagType } from "@/types/tags"
 import { useTagStore } from "@/store/tagListStore"
-
-
-export type NoteListSibeBarProps = {
-    id: string
-    title?: string
-    text: string
-    isArchived: boolean
-    tagId?: string
-}
+import { useNoteStore } from "@/store/noteListStore"
+import { NoteType } from "@/types/notes"
 
 export function AppSidebar({user}: {user: User}) {
-    
-    const [initialNotes, setInitialNotes] = useState<NoteListSibeBarProps[]>([])
-    const [localNotes, setLocalNotes] = useState<NoteListSibeBarProps[]>([])
+
+    const [localNotes, setLocalNotes] = useState<NoteType[]>([])
     const [searchQuery, setSearchQuery] = useState<string>("")
-
-    const [tagList, setTagList] = useState<NoteTagType[]>([])
-
-    const {items: tags, getItems } = useTagStore((state) => state) 
-
+    
+    const {items: noteStoreList, getItems: getNoteStoreList } = useNoteStore((state) => state) 
+    const {items: tagStoreList, getItems: getTagStoreList } = useTagStore((state) => state)
+    
+    
     useEffect(() => {
         let ignore = false
-        fetch(`/api/notes?email=${user.email}`).then(async (res) => {
-            const data = await res.json()
-            if (!ignore) {
-                setInitialNotes(data.notes || [])
-                setLocalNotes(data.notes || [])
-            }
-        }).catch((error) => {
-            toast.error("Fetching notes", {
-                position: "top-center",
-                description: error.Message,
-                duration: 6000,
-            });
-        })
-
-        getItems()
-
+        const fetchNotes = async () => await getNoteStoreList()
+        const fetchTags = async () => await getTagStoreList()
+        if (!ignore) {
+            fetchNotes()
+            fetchTags()
+        }
         return () => { ignore = true; };
-    }, [user, user.email])
+    }, [user])
+
+    useEffect(() => {
+        if (noteStoreList.length > 0) {
+            setLocalNotes(noteStoreList)
+        }
+    }, [noteStoreList])
 
     const fuseOptions = {
         keys: ["title"],
         threshold: 0.2,
     }
-    const fuse = new Fuse(initialNotes, fuseOptions);
+    const fuse = new Fuse(noteStoreList, fuseOptions);
     
     const handleFilterNotes = (event: ChangeEvent<HTMLInputElement>) => {
         const query = event.target.value.trim().toLowerCase()
@@ -67,7 +53,7 @@ export function AppSidebar({user}: {user: User}) {
             const results = fuse.search(query)
             setLocalNotes(results.map(result => result.item))
         } else {
-            setLocalNotes(initialNotes)
+            setLocalNotes(noteStoreList)
         }
     }
 
@@ -80,7 +66,7 @@ export function AppSidebar({user}: {user: User}) {
                     />
                 </div>
             </SidebarHeader>
-            <AppSidebarContent key={localNotes.length} notes={localNotes} tags={tags}/>
+            <AppSidebarContent key={"appside_"+localNotes.length+tagStoreList.length} notes={localNotes} tags={tagStoreList}/>
         </Sidebar>
     )
 }

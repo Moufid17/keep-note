@@ -14,3 +14,14 @@ export const schemaNoteAskAIActionResponse = z.object({
 export type NoteAskAIAction = z.infer<typeof schemaNoteAskAIAction>
 export type NoteListAskAIAction = Omit<NoteAskAIAction, 'noteId'>
 export type NoteAskAIActionResponse = z.infer<typeof schemaNoteAskAIActionResponse>
+
+
+export const noteSchema = z.object({
+    id: z.string().min(36, "Note ID is required"),
+    title: z.string().optional().default(""),
+    text: z.string().optional().default(""),
+    isArchived: z.boolean().default(false),
+    tagId: z.string().nullable().optional().default(""),
+})
+
+export type NoteType = z.infer<typeof noteSchema>

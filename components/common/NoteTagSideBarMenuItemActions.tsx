@@ -8,14 +8,21 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import ColorPicker from "../ui/ColorPicker"
 import { UpperCaseFirstLetter } from "@/lib/utils"
-import { updateTagAction } from "@/app/actions/tags"
 import TagIcon from "../ui/TagIcon"
 import { NoteTagType } from "@/types/tags"
 import { useTagStore } from "@/store/tagListStore"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useNoteStore } from "@/store/noteListStore"
+import { NoteType } from "@/types/notes"
 
 
 const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagType, onRemoveLocally: (value:string) => void}) => {
+    const router = useRouter()
     const { id, name, color } = data
+    
+    const noteId = useSearchParams().get("noteId") ?? ""
+    const tagIdParam = useSearchParams().get("tagId") ?? ""
+    const {items: noteStoreList, updateItem: updateNoteStore} = useNoteStore((state) => state) 
 
     const [localTagId, setLocalTagId] = useState<string>(id)
     const [localTagName, setLocalTagName] = useState<string>(name)
@@ -50,6 +57,28 @@ const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagTyp
             position: "top-right",
             description: "Tag color changed successfully"
         })
+    }
+
+    const handleChangeTag = async () => {
+        const note : NoteType | undefined = noteStoreList.find(note => note.id === noteId)
+        if (note) {
+            if (tagIdParam && tagIdParam.length> 0 && localTagId === tagIdParam) return
+            console.log('Tag =>', localTagId, tagIdParam);
+            console.log('Note =>', note);
+
+            await updateNoteStore(noteId, { ...note, tagId: localTagId }).then(() => {
+                toast.success("Tag", {
+                    position: "top-right",
+                    description: "Tag changed successfully"
+                })
+                router.replace(`/notes?noteId=${noteId}&tagId=${localTagId}`)
+            })
+        } else {
+            toast.error("Error", {
+                position: "top-right",
+                description: "Note not found"
+            })
+        }
     }
     
     const handleDeleteTag = () => {
@@ -92,7 +121,7 @@ const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagTyp
 
     return (
         <SidebarMenuItem key={id} className="flex items-center justify-between gap-2">
-            <SidebarMenuButton asChild className={`cursor-pointer mb-1`} >
+            <SidebarMenuButton asChild className={`cursor-pointer mb-1`} onClick={handleChangeTag}>
                 <div><TagIcon color={localTagColor}/><span className="text-sm px-2">{UpperCaseFirstLetter(localTagName)}</span></div>
             </SidebarMenuButton>
             <DropdownMenu open={isOpenDropdown} onOpenChange={setIsOpenDropdown}>

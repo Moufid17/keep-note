@@ -1,8 +1,8 @@
 "use server"
 import { getUser } from '@/auth/server';
 import { prismaClient } from '@/db/prisma'
-import { handleError } from '@/lib/utils';
-import { schemaNoteAskAIAction } from '@/types/notes';
+import { ErrorResponse, handleError } from '@/lib/utils';
+import { noteSchema, NoteType, schemaNoteAskAIAction } from '@/types/notes';
 
 import {OpenAI} from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
@@ -24,6 +24,29 @@ const existingUser = async ()  => {
     if (!existingUser) throw new Error("User not found");
     return existingUser;
 };
+
+export const getNotesAction = async () : Promise<ErrorResponse| NoteType[]>=> {
+    try {
+        const currentUser = await existingUser()
+        const notes : NoteType[] = await prismaClient.note.findMany({
+            where: { author: {email: currentUser.email}, },
+            select: {
+                id: true,
+                title: true,
+                text: true,
+                tagId: true,
+                isArchived: true,
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+        noteSchema.array().safeParseAsync(notes)
+        return notes
+    } catch (error) {
+        return handleError(error);
+    }
+}
 
 export const createNoteAction = async (noteId: string) => {
     try {
@@ -61,7 +84,7 @@ export const updateNoteAction = async (noteId: string, text: string, title="") =
     } catch (error) {
         return handleError(error);
     }
-  };
+};
 
 export const updateNoteTitleAction = async (noteId: string, title="") => {
     try {
@@ -114,7 +137,44 @@ export const updateNoteTagAction = async (noteId: string, tagId:string) => {
     } catch (error) {
         return handleError(error);
     }
-};
+}
+
+export const updateNoteActionDev = async (id: string, title: string="", text:string="", archived:boolean=false, tagId:string|null=null) : Promise<ErrorResponse| NoteType> => {
+    try {
+        const parsedData = noteSchema.safeParse({ id, title, text, isArchived: archived, tagId });
+        if (!parsedData.success) {
+            const errorMessages = parsedData.error.errors.map(err => err.message).join(", ");
+            throw new Error(`Validation failed: ${errorMessages}`);
+        }
+
+        const { id: noteId, title: noteTitle, text: noteText, isArchived, tagId: noteTagId } = parsedData.data
+
+        await existingUser()
+        const result : NoteType = await prismaClient.note.update({
+            where: { id: noteId },
+            data: { 
+                title: noteTitle,
+                text: noteText,
+                isArchived,
+                tagId: noteTagId,
+            },
+            select: {
+                id: true,
+                title: true,
+                text: true,
+                isArchived: true,
+                tagId: true,
+            }
+        });
+    
+        const parsedResult = noteSchema.safeParse(result);
+        if (!parsedResult.success) throw new Error("Invalid tag data")
+
+        return parsedResult.data;
+    } catch (error) {
+        return handleError(error);
+    }
+}
   
 export const deleteNoteAction = async (noteId: string) => {
     try {
