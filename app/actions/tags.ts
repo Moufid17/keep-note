@@ -15,6 +15,9 @@ export const getTagsAction = async () : Promise<ErrorResponse| NoteTagType[]>=> 
                 name: true,
                 color: true,
             },
+            orderBy: {
+                createdAt: 'asc',
+            }
         })
         noteTagSchema.array().safeParse(tags)
         return tags
