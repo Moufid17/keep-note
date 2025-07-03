@@ -3,21 +3,21 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu } from "@/components/ui/sidebar"
 import NoteSideBarMenuItemActions from "@/components/common/NoteSideBarMenuItemActions"
 import { ChevronDown } from "lucide-react"
-import { NoteListSibeBarProps } from "@/components/layout/AppSidebar"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { NoteType } from "@/types/notes"
 
 type NoteSideBarMenuGroupProps = {
     title: string
     defaultOpen?: boolean
-    notes: NoteListSibeBarProps[]
+    notes: NoteType[]
 }
 
 
 const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
     const router = useRouter();
     const { title, notes, defaultOpen } = props
-    const [localNotes, setLocalNotes] = useState<NoteListSibeBarProps[]>(notes);
+    const [localNotes, setLocalNotes] = useState<NoteType[]>(notes);
     const [editingNoteId, setEditingNoteId] = useState<string|null>(null);
 
     if (notes !== localNotes) {
@@ -48,7 +48,7 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
                 <CollapsibleContent>
                     <SidebarGroupContent className="lg:pl-2 h-40 lg:min-h-50 overflow-y-auto overflow-x-hidden">
                         <SidebarMenu>
-                            {localNotes.map((note: NoteListSibeBarProps) => 
+                            {localNotes.map((note: NoteType) => 
                                     <NoteSideBarMenuItemActions key={`${note.id}`} note={note}
                                         onRemoveLocally={() => handleRemoveNoteFromCurrentLocalList(note.id)}
                                         editingNoteId={editingNoteId}

@@ -3,20 +3,20 @@ import {
     SidebarContent,
 } from "@/components/ui/sidebar"
 import NoteSideBarMenuGroup from "@/components/common/NoteSideBarMenuGroup"
-import { NoteListSibeBarProps } from "./AppSidebar"
 import { useState } from "react";
 import { NoteTagType } from "@/types/tags";
 import { NoteTagSibeBarMenuGroup } from "../common/NoteTagSibeBarMenuGroup";
+import { NoteType } from "@/types/notes";
 
 
-export function AppSidebarContent({ notes, tags }: { notes: NoteListSibeBarProps[], tags: NoteTagType[] }) {
-    const [localNotes, setLocalNotes] = useState<NoteListSibeBarProps[]>(notes);
+export function AppSidebarContent({ notes, tags }: { notes: NoteType[], tags: NoteTagType[] }) {
+    const [localNotes, setLocalNotes] = useState<NoteType[]>(notes);
     const [localTags, setLocalTags] = useState<NoteTagType[]>(tags);
 
     if (notes !== localNotes) setLocalNotes(notes)
     if (tags !== localTags) setLocalTags(tags)
 
-    let notesMap: Record<string, NoteListSibeBarProps[]> = {
+    let notesMap: Record<string, NoteType[]> = {
         unArchivedNotes : [],
         archivedNotes : [],
     }

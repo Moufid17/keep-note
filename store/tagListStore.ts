@@ -5,10 +5,10 @@ import { create } from 'zustand'
 
 interface NoteTagListTypeStore {
   items: NoteTagType[]
-  getItems: () => void
+  getItems: () => Promise<void>
   addItem: (item: NoteTagType) => void
   removeItem: (id: string) => void
-  updateItem: (id: string, updatedItem: Partial<NoteTagType>) => void
+  updateItem: (id: string, updatedItem: Partial<NoteTagType>) => Promise<void>
 }
   // setItems: (items: NoteTagType[]) => void
   // clearItems: () => void
@@ -19,7 +19,7 @@ interface NoteTagListTypeStore {
 export const useTagStore = create<NoteTagListTypeStore>()((set, get) => ({
   items: [],
   getItems: async() => {
-    getTagsAction()
+    await getTagsAction()
       .then((data: ErrorResponse| NoteTagType[]) => {
         if ('errorMessage' in data) return
         set({ items: data })

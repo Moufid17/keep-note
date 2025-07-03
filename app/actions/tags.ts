@@ -72,7 +72,7 @@ export const updateTagAction = async (tagId: string, name: string, color="") : P
     } catch (error) {
         return handleError(error);
     }
-};
+}
 
 export const deleteTagAction = async (tagId: string) => {
     try {

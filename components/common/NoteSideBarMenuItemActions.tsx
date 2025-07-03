@@ -6,7 +6,6 @@ import Link from "next/link"
 import { SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { EllipsisVertical, SquarePen, XIcon } from "lucide-react"
-import { NoteListSibeBarProps } from "@/components/layout/AppSidebar"
 import LoadingIndicator from "@/components/common/loading-indicator"
 import { Input } from "@/components/ui/input"
 import useNote from "@/hooks/useNote"
@@ -18,8 +17,9 @@ import NoteArchiveButton from "./NoteArchiveButton"
 import TagIcon from "../ui/TagIcon"
 import { useTagStore } from "@/store/tagListStore"
 import { NoteTagType } from "@/types/tags"
+import { NoteType } from "@/types/notes"
 interface INoteSideBar {
-    note: NoteListSibeBarProps
+    note: NoteType
     editingNoteId: string|null
     setEditingNoteId: (id: string|null) => void
     onRemoveLocally?: () => void
