@@ -1,7 +1,27 @@
 "use server"
 import { prismaClient } from "@/db/prisma";
-import { handleError } from "@/lib/utils";
+import { ErrorResponse, handleError } from "@/lib/utils";
 import { getUser } from '@/auth/server';
+import { noteTagSchema, NoteTagType } from "@/types/tags";
+
+
+export const getTagsAction = async () : Promise<ErrorResponse| NoteTagType[]>=> {
+    try {
+        const currentUser = await existingUser()
+        const tags : NoteTagType[] = await prismaClient.tag.findMany({
+            where: { authorId: currentUser.id },
+            select: {
+                id: true,
+                name: true,
+                color: true,
+            },
+        })
+        noteTagSchema.array().safeParse(tags)
+        return tags
+    } catch (error) {
+        return handleError(error);
+    }
+}
 
 
 export const createTagAction = async (tagId: string, name:string, color:string) => {
@@ -24,19 +44,28 @@ export const createTagAction = async (tagId: string, name:string, color:string) 
     }
 }
 
-export const updateTagAction = async (tagId: string, name: string, color="") => {
+export const updateTagAction = async (tagId: string, name: string, color="") : Promise<ErrorResponse| NoteTagType> => {
     try {
         if (tagId.length <= 0) throw new Error("Tag ID is required");
         if (name.length <= 0 && color.length < 0) throw new Error("Name  and color are required");
 
         await existingUser()
     
-        await prismaClient.tag.update({
+        const result: NoteTagType = await prismaClient.tag.update({
             where: { id: tagId },
             data: { name , color },
-        });
+            select: {
+                id: true,
+                name: true,
+                color: true,
+            }
+        })
+        const parsedResult = noteTagSchema.safeParse(result);
+        if (!parsedResult.success) {
+            throw new Error("Invalid tag data");
+        }
+        return parsedResult.data;
     
-        return { errorMessage: null };
     } catch (error) {
         return handleError(error);
     }

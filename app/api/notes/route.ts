@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
           title: true,
           text: true,
           isArchived: true,
+          tagId: true,
         },
         orderBy: {
           createdAt: "desc",

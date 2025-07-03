@@ -5,12 +5,13 @@ import {
 import NoteSideBarMenuGroup from "@/components/common/NoteSideBarMenuGroup"
 import { NoteListSibeBarProps } from "./AppSidebar"
 import { useState } from "react";
-import { NoteTagSibeBarMenuGroup, NoteTagSibeBarMenuGroupPropsType } from "../common/NoteTagSibeBarMenuGroup";
+import { NoteTagType } from "@/types/tags";
+import { NoteTagSibeBarMenuGroup } from "../common/NoteTagSibeBarMenuGroup";
 
 
-export function AppSidebarContent({ notes, tags }: { notes: NoteListSibeBarProps[], tags: NoteTagSibeBarMenuGroupPropsType[] }) {
+export function AppSidebarContent({ notes, tags }: { notes: NoteListSibeBarProps[], tags: NoteTagType[] }) {
     const [localNotes, setLocalNotes] = useState<NoteListSibeBarProps[]>(notes);
-    const [localTags, setLocalTags] = useState<NoteTagSibeBarMenuGroupPropsType[]>(tags);
+    const [localTags, setLocalTags] = useState<NoteTagType[]>(tags);
 
     if (notes !== localNotes) setLocalNotes(notes)
     if (tags !== localTags) setLocalTags(tags)

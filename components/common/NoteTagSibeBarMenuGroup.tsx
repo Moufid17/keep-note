@@ -12,20 +12,15 @@ import { generateNoteId } from '@/lib/utils';
 import NoteTagSideBarMenuItemActions from './NoteTagSideBarMenuItemActions';
 import { createTagAction, deleteTagAction } from '@/app/actions/tags';
 import { TAG_DEFAULT_COLOR, TAG_DEFAULT_NAME } from '@/lib/constants';
+import { NoteTagType } from '@/types/tags';
 
-export type NoteTagSibeBarMenuGroupPropsType = {
-    id: string
-    name: string
-    color: string
-}
-
-export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagSibeBarMenuGroupPropsType[]}) {
+export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
     
-    const [localTagList, setLocalTagList] = useState<NoteTagSibeBarMenuGroupPropsType[]>(data);
+    const [localTagList, setLocalTagList] = useState<NoteTagType[]>(data);
 
     const handleAddTag = async () => {
         const uuid : string = generateNoteId();
-        const newTag: NoteTagSibeBarMenuGroupPropsType = {
+        const newTag: NoteTagType = {
             id: uuid.trim(),
             name: TAG_DEFAULT_NAME.trim().toLowerCase(),
             color: TAG_DEFAULT_COLOR.trim()

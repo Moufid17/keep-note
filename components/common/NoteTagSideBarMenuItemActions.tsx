@@ -1,44 +1,41 @@
 "use client"
-import { useRef, useState, useTransition } from "react"
+import { useState, useTransition } from "react"
 import { toast } from "sonner"
 import { SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { EllipsisVertical, SquarePen, Trash2, XIcon, Hash } from "lucide-react"
+import { EllipsisVertical, SquarePen, Trash2, XIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import ColorPicker from "../ui/ColorPicker"
 import { UpperCaseFirstLetter } from "@/lib/utils"
-import { NoteTagSibeBarMenuGroupPropsType } from "./NoteTagSibeBarMenuGroup"
 import { updateTagAction } from "@/app/actions/tags"
+import TagIcon from "../ui/TagIcon"
+import { NoteTagType } from "@/types/tags"
+import { useTagStore } from "@/store/tagListStore"
 
 
-const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagSibeBarMenuGroupPropsType, onRemoveLocally: (value:string) => void}) => {
+const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagType, onRemoveLocally: (value:string) => void}) => {
     const { id, name, color } = data
 
     const [localTagId, setLocalTagId] = useState<string>(id)
     const [localTagName, setLocalTagName] = useState<string>(name)
-    const [localTagColor, setTagColor] = useState<string>(color);
+    const [localTagColor, setTagColor] = useState<string>(color)
 
     const [isPendingToUpdateTagName, startTransitionToUpdateTagName] = useTransition()
     const [isLoading, setIsLoading] = useState(false)
     const [isOpenDropdown, setIsOpenDropdown] = useState(false)
 
-    
+    const {updateItem: updateTag } = useTagStore((state) => state)
+
     const handleRenameTag = () => {
         startTransitionToUpdateTagName(async () => {
-            setLocalTagName(localTagName.trim())
-            const result = await updateTagAction(localTagId, localTagName.trim().toLowerCase(), localTagColor.trim())
-            if (result.errorMessage) {
-                toast.error("Note", {
-                    position: "top-right",
-                    description: result.errorMessage
-                });
-            } else {
-                toast.success("Note", {
-                    position: "top-right",
-                    description:"Note renamed successfully"
-                });
-            }
+            const newTagName = localTagName.trim().toLowerCase()
+            setLocalTagName(newTagName)
+            await updateTag(localTagId, { name: newTagName, color: localTagColor.trim() })
+            toast.success("Note", {
+                position: "top-right",
+                description:"Note renamed successfully"
+            });
         })
         if (!isPendingToUpdateTagName) {
             setIsLoading(false)
@@ -48,18 +45,11 @@ const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagSib
 
     const handleChangeTagColor = async (color: string) => {
         setTagColor(color)
-        const result = await updateTagAction(localTagId, localTagName.trim().toLowerCase(), color.trim())
-        if (result.errorMessage) {
-            toast.error("Tag", {
-                position: "top-right",
-                description: result.errorMessage
-            });
-        } else {
-            toast.success("Tag", {
-                position: "top-right",
-                description:"Tag color changed successfully"
-            });
-        }
+        await updateTag(localTagId, { name: localTagName.trim().toLowerCase(), color: color.trim()})
+        toast.success("Tag", {
+            position: "top-right",
+            description: "Tag color changed successfully"
+        })
     }
     
     const handleDeleteTag = () => {
@@ -103,7 +93,7 @@ const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagSib
     return (
         <SidebarMenuItem key={id} className="flex items-center justify-between gap-2">
             <SidebarMenuButton asChild className={`cursor-pointer mb-1`} >
-                <div><span style={{ color: localTagColor, fontSize:"18" }}>#</span> <span className="text-sm px-2">{UpperCaseFirstLetter(localTagName)}</span></div>
+                <div><TagIcon color={localTagColor}/><span className="text-sm px-2">{UpperCaseFirstLetter(localTagName)}</span></div>
             </SidebarMenuButton>
             <DropdownMenu open={isOpenDropdown} onOpenChange={setIsOpenDropdown}>
                 <DropdownMenuTrigger asChild>

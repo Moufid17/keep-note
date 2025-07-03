@@ -1,4 +1,3 @@
-// [ ] Avoid to edit multiple note title: should be one by one.
 "use client"
 import { useSearchParams } from "next/navigation"
 import {  useEffect, useState, useTransition } from "react"
@@ -16,6 +15,8 @@ import { Button } from "@/components/ui/button"
 import { updateNoteTitleAction } from "@/app/actions/notes"
 import NoteRestoreButton from "./NoteRestoreButton"
 import NoteArchiveButton from "./NoteArchiveButton"
+import TagIcon from "../ui/TagIcon"
+import { useTagStore } from "@/store/tagListStore"
 interface INoteSideBar {
     note: NoteListSibeBarProps
     editingNoteId: string|null
@@ -33,6 +34,9 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
 
     const [isPendingToUpdateNoteTitle, startTransitionToUpdateNoteTitle] = useTransition()
     const [isLoading, setLoading] = useState(false)
+
+    const {items: tags } = useTagStore((state) => state)
+    const tag = tags.find(tag => tag.id === note.tagId)
     
     useEffect(() => {
         if (noteId === note.id) {
@@ -97,16 +101,19 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
          {!isLoading && editingNoteId !== note.id && (
             <SidebarMenuItem>
                 <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer }`}>
-                    <Link href={`/notes/?noteId=${note.id}`} onClick={() => setNoteTitle(localNoteTitle.length > 0 ? localNoteTitle : noteText)}><LoadingIndicator /><p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText}</p></Link>
+                    <Link href={`/notes/?noteId=${note.id}`} onClick={() => setNoteTitle(localNoteTitle.length > 0 ? localNoteTitle : noteText.slice(0,20))}>
+                        <LoadingIndicator /> {tag && <TagIcon color={tag?.color}/>}
+                        <p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText.slice(0, 20)}</p>
+                    </Link>
                 </SidebarMenuButton>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <SidebarMenuAction key={note.id} onClick={() => {}}>
+                        <SidebarMenuAction key={note.id}>
                             <EllipsisVertical className={`${noteId === note.id && "text-black"}`}/>
                         </SidebarMenuAction>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent side="right" align="start">
-                        <DropdownMenuItem className="cursor-pointer justify-center" onClick={() => {
+                        <DropdownMenuItem className="cursor-pointer justify-start" onClick={() => {
                                 setLoading(true)
                                 setEditingNoteId(note.id)
                             }}
