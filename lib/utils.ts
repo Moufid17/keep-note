@@ -19,3 +19,7 @@ export const handleError = (error: unknown) : ErrorResponse => {
 export const generateNoteId = () : string => {
   return crypto.randomUUID()
 }
+
+export const UpperCaseFirstLetter = (str: string) : string => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}

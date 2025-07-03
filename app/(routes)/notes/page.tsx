@@ -1,16 +1,16 @@
 import React from 'react'
 
-import NoteProvider from '@/providers/NoteProvider'
-import AskAIMenu from "@/components/common/AskAIMenu";
-import NewNoteButton from "@/components/common/NewNoteButton";
-import NoteTextArea from "@/components/common/NoteTextArea";
-import { generateNoteId } from "@/lib/utils";
+import { redirect } from 'next/navigation'
 import { prismaClient } from "@/db/prisma";
 import { getUser } from "@/auth/server";
-import { AppSidebar } from '@/components/layout/AppSidebar';
+import { generateNoteId } from "@/lib/utils";
+import NoteProvider from '@/providers/NoteProvider'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import AppHeader from '@/components/layout/AppHeader';
-import { redirect } from 'next/navigation'
+import { AppSidebar } from '@/components/layout/AppSidebar';
+import NoteTextArea from "@/components/common/NoteTextArea";
+import AskAIMenu from "@/components/common/AskAIMenu";
+import NewNoteButton from "@/components/common/NewNoteButton";
 
 
 type Props = {
