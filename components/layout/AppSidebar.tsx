@@ -11,6 +11,7 @@ import { User } from "@supabase/supabase-js"
 import { ChangeEvent, useEffect, useState } from "react"
 import { toast } from "sonner"
 import { AppSidebarContent } from "./AppSidebarContent"
+import { NoteTagSibeBarMenuGroupPropsType } from "../common/NoteTagSibeBarMenuGroup"
 
 
 export type NoteListSibeBarProps = {
@@ -25,6 +26,8 @@ export function AppSidebar({user}: {user: User}) {
     const [initialNotes, setInitialNotes] = useState<NoteListSibeBarProps[]>([])
     const [localNotes, setLocalNotes] = useState<NoteListSibeBarProps[]>([])
     const [searchQuery, setSearchQuery] = useState<string>("")
+
+    const [tagList, setTagList] = useState<NoteTagSibeBarMenuGroupPropsType[]>([])
 
     useEffect(() => {
         let ignore = false
@@ -41,6 +44,21 @@ export function AppSidebar({user}: {user: User}) {
                 duration: 6000,
             });
         })
+
+
+        fetch(`/api/tags?email=${user.email}`).then(async (res) => {
+            const data = await res.json()
+            if (!ignore) {
+                setTagList(data.tags || [])
+            }
+        }).catch((error) => {
+            toast.error("Fetching tags", {
+                position: "top-center",
+                description: error.Message,
+                duration: 6000,
+            });
+        })
+
         return () => { ignore = true; };
     }, [user, user.email])
 
@@ -70,7 +88,7 @@ export function AppSidebar({user}: {user: User}) {
                     />
                 </div>
             </SidebarHeader>
-            <AppSidebarContent key={localNotes.length} notes={localNotes} />
+            <AppSidebarContent key={localNotes.length} notes={localNotes} tags={tagList}/>
         </Sidebar>
     )
 }
