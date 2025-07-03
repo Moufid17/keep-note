@@ -48,7 +48,7 @@ function NoteDeleteButton(props: INoteDeleteButton) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" className="cursor-pointer w-full text-red-500 hover:text-red-500">
+                <Button variant="ghost" className="cursor-pointer w-full text-red-500 hover:text-red-500 justify-start">
                     <Trash2 className="py-0"/><span className='text-left'>Delete</span>
                 </Button>
             </AlertDialogTrigger>

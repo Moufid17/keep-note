@@ -48,7 +48,7 @@ function NoteArchiveButton(props: INoteArchiveButton) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" className="cursor-pointer w-full text-orange-500 hover:text-orange-500">
+                <Button variant="ghost" className="cursor-pointer w-full text-orange-500 hover:text-orange-500 justify-start">
                     <Archive className="py-0"/><span className='text-left'>Archive</span>
                 </Button>
             </AlertDialogTrigger>
