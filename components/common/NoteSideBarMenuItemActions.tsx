@@ -17,6 +17,7 @@ import NoteRestoreButton from "./NoteRestoreButton"
 import NoteArchiveButton from "./NoteArchiveButton"
 import TagIcon from "../ui/TagIcon"
 import { useTagStore } from "@/store/tagListStore"
+import { NoteTagType } from "@/types/tags"
 interface INoteSideBar {
     note: NoteListSibeBarProps
     editingNoteId: string|null
@@ -35,8 +36,8 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
     const [isPendingToUpdateNoteTitle, startTransitionToUpdateNoteTitle] = useTransition()
     const [isLoading, setLoading] = useState(false)
 
-    const {items: tags } = useTagStore((state) => state)
-    const tag = tags.find(tag => tag.id === note.tagId)
+    const {items: storeTags} = useTagStore((state) => state)
+    const tag: NoteTagType | undefined = storeTags.find(tag => tag.id === note.tagId)
     
     useEffect(() => {
         if (noteId === note.id) {
@@ -67,6 +68,10 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
         }
     }
 
+    const handleOnClickNote = () => {
+        setNoteTitle(localNoteTitle.length > 0 ? localNoteTitle : noteText.slice(0,20))
+    }
+    
     if (isLoading && editingNoteId === note.id) {
         return (
         <div className="relative w-full max-w-sm">
@@ -101,7 +106,7 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
          {!isLoading && editingNoteId !== note.id && (
             <SidebarMenuItem>
                 <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer }`}>
-                    <Link href={`/notes/?noteId=${note.id}`} onClick={() => setNoteTitle(localNoteTitle.length > 0 ? localNoteTitle : noteText.slice(0,20))}>
+                    <Link href={`/notes/?noteId=${note.id}&tagId=${note.tagId}`} onClick={handleOnClickNote}>
                         <LoadingIndicator /> {tag && <TagIcon color={tag?.color}/>}
                         <p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText.slice(0, 20)}</p>
                     </Link>
