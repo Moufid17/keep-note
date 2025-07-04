@@ -20,7 +20,7 @@ const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagTyp
     const router = useRouter()
     const { id, name, color } = data
     
-    const noteId = useSearchParams().get("noteId") ?? ""
+    const noteId = useSearchParams().get("noteid") ?? ""
     const tagIdParam = useSearchParams().get("tagId") ?? ""
     const {items: noteStoreList, updateItem: updateNoteStore} = useNoteStore((state) => state) 
 
@@ -63,15 +63,13 @@ const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagTyp
         const note : NoteType | undefined = noteStoreList.find(note => note.id === noteId)
         if (note) {
             if (tagIdParam && tagIdParam.length> 0 && localTagId === tagIdParam) return
-            console.log('Tag =>', localTagId, tagIdParam);
-            console.log('Note =>', note);
 
             await updateNoteStore(noteId, { ...note, tagId: localTagId }).then(() => {
                 toast.success("Tag", {
                     position: "top-right",
                     description: "Tag changed successfully"
                 })
-                router.replace(`/notes?noteId=${noteId}&tagId=${localTagId}`)
+                router.replace(`/notes?noteid=${noteId}&tagid=${localTagId}`)
             })
         } else {
             toast.error("Error", {

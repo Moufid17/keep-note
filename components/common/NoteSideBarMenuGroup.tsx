@@ -30,7 +30,7 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
         
         if (updatedNotes.length >= 1 && !updatedNotes[0].isArchived === false) {
             // Redirect to the first note in the list if it exists and is not archived
-            router.replace(`/notes/?noteId=${updatedNotes[0]?.id}`)
+            router.replace(`/notes/?noteid=${updatedNotes[0]?.id}`)
         } else {
             router.replace(`/notes`)
         }

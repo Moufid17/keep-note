@@ -28,7 +28,7 @@ function NewNoteButton() {
                     position: "top-right",
                     description:"Note created successfully"
                 });
-                router.push(`/notes/?noteId=${uuid}`);
+                router.push(`/notes/?noteid=${uuid}`);
             }
         }
         

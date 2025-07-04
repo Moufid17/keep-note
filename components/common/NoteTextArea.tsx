@@ -15,8 +15,8 @@ type Props = {
 let updateTimeout: NodeJS.Timeout;
 
 function NoteTextArea({ noteId, startingNoteText }: Props) {
-  const noteIdParam = useSearchParams().get("noteId") || "";
-  const tagIdParam = useSearchParams().get("tagId") || "";
+  const noteIdParam = useSearchParams().get("noteid") || "";
+  const tagIdParam = useSearchParams().get("tagid") || "";
   const {noteText, setNoteText} = useNote();
 
   const {items: storeTags } = useTagStore((state) => state)

@@ -26,7 +26,7 @@ import { ErrorResponse } from "@/lib/utils";
 import VoiceButton from "./VoiceButton";
 
 function AskAIMenu() {
-    const noteIdParam = useSearchParams().get("noteId") || "";
+    const noteIdParam = useSearchParams().get("noteid") || "";
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
