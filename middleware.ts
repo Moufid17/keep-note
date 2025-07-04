@@ -75,7 +75,7 @@ export async function updateSession(request: NextRequest) {
 
   // If the user is trying to access a noteId in the URL, check if they are logged in
   // If they are not logged in, redirect them to the login page
-  if (searchParams.get("noteId") && pathname.toLowerCase() === "/notes") {
+  if (searchParams.get("noteid") && pathname.toLowerCase() === "/notes") {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -87,19 +87,20 @@ export async function updateSession(request: NextRequest) {
     }
   }
     
-  if (!searchParams.get("noteId") && pathname.toLowerCase() === "/notes") {
+  if (!searchParams.get("noteid") && pathname.toLowerCase() === "/notes") {
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
       // Retrieve the newest note for the user
-      const { newestNoteId } = await fetch(
+      const { newestNoteId, newestNoteTagId } = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/fetch-newest-note?email=${user.email}`,
       ).then((res) => res.json());
       
       if (newestNoteId) {
         const url = request.nextUrl.clone();
-        url.searchParams.set("noteId", newestNoteId);
+        url.searchParams.set("noteid", newestNoteId)
+        url.searchParams.set("tagid", newestNoteTagId || "null")
         return NextResponse.redirect(url);
       } else {
         const { noteId } = await fetch(
@@ -114,7 +115,8 @@ export async function updateSession(request: NextRequest) {
         
         if (noteId) {
           const url = request.nextUrl.clone();
-          url.searchParams.set("noteId", noteId);
+          url.searchParams.set("noteid", noteId);
+          url.searchParams.set("tagid", "null")
           return NextResponse.redirect(url);
         }
       }
