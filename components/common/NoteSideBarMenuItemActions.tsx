@@ -18,6 +18,7 @@ import TagIcon from "../ui/TagIcon"
 import { useTagStore } from "@/store/tagListStore"
 import { NoteTagType } from "@/types/tags"
 import { NoteType } from "@/types/notes"
+import NoteChangeTagButton from "./NoteChangeTagButton"
 interface INoteSideBar {
     note: NoteType
     editingNoteId: string|null
@@ -26,7 +27,7 @@ interface INoteSideBar {
 }
 
 const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
-    const noteId = useSearchParams().get("noteId") ?? ""
+    const noteId = useSearchParams().get("noteid") ?? ""
     const { note, editingNoteId, setEditingNoteId, onRemoveLocally } = props
     
     const { noteText: selectedNoteText } = useNote();
@@ -48,6 +49,12 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
     const noteText = localedNoteText || "EMPTY NOTE";
 
     const handleRenameNote = () => {
+        // If the note title is the same as the current title, do not update
+        if (localNoteTitle.trim().toLowerCase() === note.title?.trim().toLowerCase()) {
+            setLoading(false)
+            setEditingNoteId(null)
+            return
+        }
         startTransitionToUpdateNoteTitle(async() => {
             const error = await updateNoteTitleAction(note.id, localNoteTitle)
             if (error?.errorMessage) {
@@ -58,7 +65,7 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
             } else {
                 toast.success("Note", {
                     position: "top-right",
-                    description:"Note renamed successfully"
+                    description:"Notex renamed successfully"
                 });
             }
         })
@@ -106,7 +113,7 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
          {!isLoading && editingNoteId !== note.id && (
             <SidebarMenuItem>
                 <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer }`}>
-                    <Link href={`/notes/?noteId=${note.id}&tagId=${note.tagId}`} onClick={handleOnClickNote}>
+                    <Link href={`/notes/?noteid=${note.id}&tagid=${note.tagId}`} onClick={handleOnClickNote}>
                         <LoadingIndicator /> {tag && <TagIcon color={tag?.color}/>}
                         <p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText.slice(0, 20)}</p>
                     </Link>
@@ -117,7 +124,8 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
                             <EllipsisVertical className={`${noteId === note.id && "text-black"}`}/>
                         </SidebarMenuAction>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent side="right" align="start">
+                    <DropdownMenuContent side="bottom">
+                        <NoteChangeTagButton noteId={note.id} tagId={tag?.id}/> 
                         <DropdownMenuItem className="cursor-pointer justify-start" onClick={() => {
                                 setLoading(true)
                                 setEditingNoteId(note.id)
