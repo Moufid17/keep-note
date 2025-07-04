@@ -30,7 +30,6 @@ export const useNoteStore = create<NoteListTypeStore>()((set, get) => ({
   })),
   updateItem: async (id, updatedItem) => {
     const {title, text, isArchived, tagId} = updatedItem
-    if (!title || !text  || !tagId) return
 
     await updateNoteActionDev(id, title, text, isArchived, tagId).then((data) => {
       if ('errorMessage' in data) return
