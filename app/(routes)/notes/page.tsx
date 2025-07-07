@@ -23,7 +23,7 @@ export default async function HomePage({ searchParams }: Props){
     const user = await getUser();
     if (!user) redirect('/login')
         
-    const nodeIdParam = (await searchParams).noteId || "";
+    const nodeIdParam = (await searchParams).noteid || "";
     
     let noteId = (Array.isArray(nodeIdParam)) ? nodeIdParam[0] : nodeIdParam;
     if (noteId.length === 0) noteId = generateNoteId()
