@@ -32,7 +32,7 @@ export function AppSidebar({user}: {user: User}) {
             fetchTags()
         }
         return () => { ignore = true; };
-    }, [user])
+    }, [user, getNoteStoreList, getTagStoreList])
 
     useEffect(() => {
         if (noteStoreList.length > 0) {

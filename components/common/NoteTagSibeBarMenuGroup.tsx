@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
     SidebarGroup,
     SidebarGroupAction,
@@ -18,7 +18,7 @@ export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
     
     const [localTagList, setLocalTagList] = useState<NoteTagType[]>(data);
 
-    const handleAddTag = async () => {
+    const handleAddTag = useCallback(async () => {
         const uuid : string = generateNoteId();
         const newTag: NoteTagType = {
             id: uuid.trim(),
@@ -35,7 +35,8 @@ export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
         } else {
             setLocalTagList(prevList => [...prevList, newTag]);
         }
-    }
+    }, [setLocalTagList, createTagAction])
+    
 
     const handleRemoveTag = async (tagId: string) => {
         if (tagId.length <= 0) return;

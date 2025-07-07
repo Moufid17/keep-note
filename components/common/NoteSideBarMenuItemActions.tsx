@@ -65,7 +65,7 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
             } else {
                 toast.success("Note", {
                     position: "top-right",
-                    description:"Notex renamed successfully"
+                    description:"Note renamed successfully"
                 });
             }
         })

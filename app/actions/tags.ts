@@ -33,7 +33,7 @@ export const createTagAction = async (tagId: string, name:string, color:string) 
 
         const currentUser = await existingUser()
     
-        const tag = await prismaClient.tag.create({
+        await prismaClient.tag.create({
             data: {
                 id: tagId,
                 name: name,

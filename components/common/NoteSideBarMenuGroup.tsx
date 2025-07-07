@@ -46,7 +46,7 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
                     </CollapsibleTrigger>
                 </SidebarGroupLabel>
                 <CollapsibleContent>
-                    <SidebarGroupContent className="lg:pl-2 h-40 lg:min-h-50 overflow-y-auto overflow-x-hidden">
+                    <SidebarGroupContent className="lg:pl-2 h-60 lg:min-h-auto overflow-y-auto overflow-x-hidden">
                         <SidebarMenu>
                             {localNotes.map((note: NoteType) => 
                                     <NoteSideBarMenuItemActions key={`${note.id}`} note={note}
