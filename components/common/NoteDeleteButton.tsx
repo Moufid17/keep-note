@@ -14,7 +14,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button'
-import { deleteNoteAction } from '@/app/actions/notes'
+import { useNoteStore } from '@/store/noteListStore'
   
 
 interface INoteDeleteButton {
@@ -24,24 +24,23 @@ interface INoteDeleteButton {
 
 function NoteDeleteButton(props: INoteDeleteButton) {
     const { noteId, onRemoveFromList } = props
+    const {removeItem: removeNoteFromStore} = useNoteStore((state) => state)
     const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
 
     const handleDeleteNote = () => {
         startTransitionToArchiveNote(async() => {   
-            const error = await deleteNoteAction(noteId)
-            if (error?.errorMessage) {
+            await removeNoteFromStore(noteId).then(() => {
+                toast.success("Tag", {
+                    position: "top-right",
+                    description: `Tag has been removed.`,
+                });
+            }).catch((error) => {
+                console.error("Error removing tag in store:", error);
                 toast.error("Note", {
                     position: "top-right",
-                    description: error.errorMessage,
-                    duration: 6000
+                    description: error?.errorMessage ?? "Failed to remove tag",
                 });
-            } else {
-                if(onRemoveFromList) onRemoveFromList()
-                toast.success("Note", {
-                    position: "top-right",
-                    description:"Note delete successfully"
-                });
-            }
+            })
         })
     }
 

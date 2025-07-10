@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState, useTransition } from "react"
+import { useCallback, useEffect, useState, useTransition } from "react"
 import { toast } from "sonner"
 import { SidebarMenuAction, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import { EllipsisVertical, SquarePen, Trash2, XIcon } from "lucide-react"
@@ -14,14 +14,16 @@ import { useTagStore } from "@/store/tagListStore"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useNoteStore } from "@/store/noteListStore"
 import { NoteType } from "@/types/notes"
+import { QUERY_NOTE_PARAM, QUERY_TAG_PARAM } from "@/lib/constants"
 
 
 const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagType, onRemoveLocally: (value:string) => void}) => {
     const router = useRouter()
     const { id, name, color: initialColor } = data
     
-    const noteId = useSearchParams().get("noteid") ?? ""
-    const tagIdParam = useSearchParams().get("tagId") ?? ""
+    const noteId = useSearchParams().get(QUERY_NOTE_PARAM) ?? ""
+    const tagIdParam = useSearchParams().get(QUERY_TAG_PARAM) ?? ""
+    const {updateItem: updateTag } = useTagStore((state) => state)
     const {items: noteStoreList, updateItem: updateNoteStore} = useNoteStore((state) => state) 
 
     const [localTagId, setLocalTagId] = useState<string>(id)
@@ -32,7 +34,6 @@ const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagTyp
     const [isLoading, setIsLoading] = useState(false)
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
-    const {updateItem: updateTag } = useTagStore((state) => state)
 
     const handleRenameTag = () => {
         startTransitionToUpdateTagName(async () => {
@@ -79,7 +80,7 @@ const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagTyp
         setLocalTagName("")
         setTagColor("")
     }
-    const handleChangeTagColorWhenDropDownMenuIsClosedAndInitialColorChanged = async () => {
+    const handleChangeTagColorWhenDropDownMenuIsClosedAndInitialColorChanged = useCallback(async () => {
         if (!isDropdownOpen && localTagColor !== initialColor) {
             // l'utilisateur a fermé le menu, on applique les changements
             
@@ -89,7 +90,8 @@ const NoteTagSideBarMenuItemActions = ({data, onRemoveLocally}:{data: NoteTagTyp
                 description: "Tag color changed successfully"
             })
         }
-    }
+    }, [isDropdownOpen, localTagColor, initialColor, localTagId, localTagName, updateTag])
+    
     useEffect(() => {
         handleChangeTagColorWhenDropDownMenuIsClosedAndInitialColorChanged()
     }, [isDropdownOpen, handleChangeTagColorWhenDropDownMenuIsClosedAndInitialColorChanged])

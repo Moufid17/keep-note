@@ -10,12 +10,13 @@ import { toast } from 'sonner';
 import { Plus } from "lucide-react";
 import { generateNoteId } from '@/lib/utils';
 import NoteTagSideBarMenuItemActions from './NoteTagSideBarMenuItemActions';
-import { createTagAction, deleteTagAction } from '@/app/actions/tags';
 import { TAG_DEFAULT_COLOR, TAG_DEFAULT_NAME } from '@/lib/constants';
 import { NoteTagType } from '@/types/tags';
+import { useTagStore } from '@/store/tagListStore';
 
 export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
     
+    const {items: tagStoreList, addItem: addTagToStore, removeItem: removeTagFromStore} = useTagStore((state) => state)
     const [localTagList, setLocalTagList] = useState<NoteTagType[]>(data);
 
     const handleAddTag = useCallback(async () => {
@@ -25,33 +26,40 @@ export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
             name: TAG_DEFAULT_NAME.trim().toLowerCase(),
             color: TAG_DEFAULT_COLOR.trim()
         }
-        const result = await createTagAction(newTag.id, newTag.name, newTag.color);
-        if (result.errorMessage) {
+        await addTagToStore({...newTag}).then(() => {
+            setLocalTagList(prevList => [...prevList, newTag]);
+            toast.success("Note", {
+                position: "top-right",
+                description: "Note restored successfully"
+            });
+        }).catch((error) => {
+            console.error("Error updating note in store:", error);
             toast.error("Note", {
                 position: "top-right",
-                description: result?.errorMessage,
+                description: "Failed to add tag",
                 duration: 6000
             });
-        } else {
-            setLocalTagList(prevList => [...prevList, newTag]);
-        }
-    }, [setLocalTagList, createTagAction])
+        })
+    }, [setLocalTagList])
     
 
     const handleRemoveTag = async (tagId: string) => {
         if (tagId.length <= 0) return;
-        const updatedTagList = localTagList.filter(tag => tag.id !== tagId);
-        setLocalTagList(updatedTagList)
-
-        const result = await deleteTagAction(tagId);
-        if (!result.errorMessage) {
+        await removeTagFromStore(tagId).then(() => {
+            const updatedTagList = localTagList.filter(tag => tag.id !== tagId);
+            setLocalTagList(updatedTagList)
             toast.success("Tag", {
                 position: "top-right",
                 description: `Tag has been removed.`,
             });
-        }
+        }).catch((error) => {
+            console.error("Error removing tag in store:", error);
+            toast.error("Note", {
+                position: "top-right",
+                description: error?.errorMessage ?? "Failed to remove tag",
+            });
+        })
     }
-
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {

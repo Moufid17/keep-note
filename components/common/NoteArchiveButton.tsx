@@ -14,7 +14,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button'
-import { updateNoteArchiveAction } from '@/app/actions/notes'
+import { useNoteStore } from '@/store/noteListStore'
   
 
 interface INoteArchiveButton {
@@ -26,22 +26,32 @@ function NoteArchiveButton(props: INoteArchiveButton) {
     const { noteId, onRemoveFromList } = props
     const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
 
+    const {items: noteStoreList, updateItem: updateNoteStoreList} = useNoteStore((state) => state)
+
     const handleArchiveNote = () => {
         startTransitionToArchiveNote(async() => {   
-            const error = await updateNoteArchiveAction(noteId, true)
-            if (error?.errorMessage) {
+            const note = noteStoreList.find((note) => note.id === noteId)
+            if (!note) {
                 toast.error("Note", {
                     position: "top-right",
-                    description: error.errorMessage,
-                    duration: 6000
+                    description: "Note not exist"
                 });
-            } else {
-                if(onRemoveFromList) onRemoveFromList()
+                return
+            }
+            const {id, ...data} = note
+            await updateNoteStoreList(noteId, { ...data, isArchived: true }).then(() => {
+                if (onRemoveFromList) onRemoveFromList()
                 toast.success("Note", {
                     position: "top-right",
-                    description:"Note archived successfully"
+                    description: "Note restored successfully"
                 });
-            }
+            }).catch((error) => {
+                console.error("Error updating note in store:", error);
+                toast.error("Note", {
+                    position: "top-right",
+                    description: error.errorMessage ?? "Failed to update note"
+                });
+            })
         })
     }
 

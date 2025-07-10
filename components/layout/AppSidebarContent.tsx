@@ -3,37 +3,42 @@ import {
     SidebarContent,
 } from "@/components/ui/sidebar"
 import NoteSideBarMenuGroup from "@/components/common/NoteSideBarMenuGroup"
-import { useState } from "react";
-import { NoteTagType } from "@/types/tags";
+import { useEffect, useMemo } from "react";
 import { NoteTagSibeBarMenuGroup } from "../common/NoteTagSibeBarMenuGroup";
-import { NoteType } from "@/types/notes";
+import { useNoteStore } from "@/store/noteListStore";
+import { useTagStore } from "@/store/tagListStore";
+import Fuse from "fuse.js";
 
 
-export function AppSidebarContent({ notes, tags }: { notes: NoteType[], tags: NoteTagType[] }) {
-    const [localNotes, setLocalNotes] = useState<NoteType[]>(notes);
-    const [localTags, setLocalTags] = useState<NoteTagType[]>(tags);
+export function AppSidebarContent() {
+    const {items: noteStoreList, getItems: getNoteStoreList } = useNoteStore((state) => state) 
+    const {items: tagStoreList, getItems: getTagStoreList } = useTagStore((state) => state)
 
-    if (notes !== localNotes) setLocalNotes(notes)
-    if (tags !== localTags) setLocalTags(tags)
-
-    let notesMap: Record<string, NoteType[]> = {
-        unArchivedNotes : [],
-        archivedNotes : [],
-    }
-    notesMap = notes.reduce((acc, currentNote) => {
-        if (currentNote.isArchived)  {
-            acc["archivedNotes"].push(currentNote)
-        } else {
-            acc["unArchivedNotes"].push(currentNote)
+    useEffect(() => {
+        let ignore = false
+        const fetchNotes = async () => await getNoteStoreList()
+        const fetchTags = async () => await getTagStoreList()
+        if (!ignore) {
+            fetchNotes()
+            fetchTags()
         }
-        return acc
-    }, notesMap)
+        return () => { ignore = true; };
+    }, [getNoteStoreList, getTagStoreList])
 
+    const archivedItems = useMemo(() => noteStoreList.filter(item => item.isArchived), [noteStoreList]);
+    const unarchivedItems = useMemo(() => noteStoreList.filter(item => !item.isArchived), [noteStoreList]);
+
+    const fuseOptions = {
+        keys: ["title", "tagId"],
+        threshold: 0.2,
+    }
+    const fuse = new Fuse(noteStoreList, fuseOptions);
+    
     return (
         <SidebarContent>
-            <NoteSideBarMenuGroup key={"notes_"+notesMap.unArchivedNotes.length} defaultOpen title={`Notes (${notesMap.unArchivedNotes.length})`} notes={notesMap.unArchivedNotes}/> 
-            <NoteSideBarMenuGroup key={"archived_"+notesMap.archivedNotes.length} title={`Notes Archived (${notesMap.archivedNotes.length})`} notes={notesMap.archivedNotes}/> 
-            <NoteTagSibeBarMenuGroup key={"tag_"+localTags.length} data={localTags ?? []}/>
+            <NoteSideBarMenuGroup key={"notes_"+unarchivedItems.length} defaultOpen title={`Notes (${unarchivedItems.length})`} notes={unarchivedItems}/> 
+            <NoteSideBarMenuGroup key={"archived_"+archivedItems.length} title={`Notes Archived (${archivedItems.length})`} notes={archivedItems}/> 
+            <NoteTagSibeBarMenuGroup key={"tag_"+tagStoreList.length} data={tagStoreList}/>
         </SidebarContent>
     )
 }

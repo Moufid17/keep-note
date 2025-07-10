@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input"
 import useNote from "@/hooks/useNote"
 import NoteDeleteButton from "./NoteDeleteButton"
 import { Button } from "@/components/ui/button"
-import { updateNoteTitleAction } from "@/app/actions/notes"
 import NoteRestoreButton from "./NoteRestoreButton"
 import NoteArchiveButton from "./NoteArchiveButton"
 import TagIcon from "../ui/TagIcon"
@@ -19,16 +18,16 @@ import { useTagStore } from "@/store/tagListStore"
 import { NoteTagType } from "@/types/tags"
 import { NoteType } from "@/types/notes"
 import NoteChangeTagButton from "./NoteChangeTagButton"
+import { useNoteStore } from "@/store/noteListStore"
 interface INoteSideBar {
     note: NoteType
-    editingNoteId: string|null
-    setEditingNoteId: (id: string|null) => void
     onRemoveLocally?: () => void
 }
 
 const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
     const noteId = useSearchParams().get("noteid") ?? ""
-    const { note, editingNoteId, setEditingNoteId, onRemoveLocally } = props
+    const { note, onRemoveLocally } = props
+    const {items: noteListStore, updateItem: updateNoteStoreList} = useNoteStore((state) => state)
     
     const { noteText: selectedNoteText } = useNote();
     const [localedNoteText, setLocaleNoteText] = useState<string>(note.text)
@@ -52,26 +51,32 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
         // If the note title is the same as the current title, do not update
         if (localNoteTitle.trim().toLowerCase() === note.title?.trim().toLowerCase()) {
             setLoading(false)
-            setEditingNoteId(null)
             return
         }
         startTransitionToUpdateNoteTitle(async() => {
-            const error = await updateNoteTitleAction(note.id, localNoteTitle)
-            if (error?.errorMessage) {
+            const data = noteListStore.find((note) => note.id === noteId)
+            if (!note) {
                 toast.error("Note", {
                     position: "top-right",
-                    description: error.errorMessage
+                    description: "Note not exist"
                 });
-            } else {
+                return
+            }
+            await updateNoteStoreList(noteId, { ...data, title: localNoteTitle }).then(() => {
                 toast.success("Note", {
                     position: "top-right",
                     description:"Note renamed successfully"
                 });
-            }
+            }).catch((error) => {
+                console.error("Error updating note in store:", error);
+                toast.error("Note", {
+                    position: "top-right",
+                    description: error.errorMessage ?? "Failed to update note"
+                });
+            })
         })
         if (!isPendingToUpdateNoteTitle) {
             setLoading(false)
-            setEditingNoteId(null)
         }
     }
 
@@ -79,7 +84,7 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
         setNoteTitle(localNoteTitle.length > 0 ? localNoteTitle : noteText.slice(0,20))
     }
     
-    if (isLoading && editingNoteId === note.id) {
+    if (isLoading) {
         return (
         <div className="relative w-full max-w-sm">
             <Input type="text"
@@ -92,14 +97,13 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
                         handleRenameNote()
                     }
                 }}
-                autoFocus={isLoading && editingNoteId === note.id}
+                autoFocus={isLoading}
             />
             <Button type="button" variant="ghost" size="icon"
                 className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
                 onClick={() => { 
                     setNoteTitle(note.title ?? localNoteTitle)
                     setLoading(false)
-                    setEditingNoteId(null)
                 }}
             >
                 <XIcon className="h-4 w-4"/><span className="sr-only">Clear</span>
@@ -109,41 +113,36 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
     }
 
     return (
-       <>
-         {!isLoading && editingNoteId !== note.id && (
-            <SidebarMenuItem>
-                <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer }`}>
-                    <Link href={`/notes/?noteid=${note.id}&tagid=${note.tagId}`} onClick={handleOnClickNote}>
-                        <LoadingIndicator /> {tag && <TagIcon color={tag?.color}/>}
-                        <p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText.slice(0, 20)}</p>
-                    </Link>
-                </SidebarMenuButton>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <SidebarMenuAction key={note.id}>
-                            <EllipsisVertical className={`${noteId === note.id && "text-black"}`}/>
-                        </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent side="bottom">
-                        <NoteChangeTagButton noteId={note.id} tagId={tag?.id}/> 
-                        <DropdownMenuItem className="cursor-pointer justify-start" onClick={() => {
-                                setLoading(true)
-                                setEditingNoteId(note.id)
-                            }}
-                        >
-                            <SquarePen /><span>Rename</span>
-                        </DropdownMenuItem>
-                        { note.isArchived ? 
-                            ((<NoteRestoreButton noteId={note.id} onRemoveFromList={onRemoveLocally} />))
-                        :
-                            (<NoteArchiveButton noteId={note.id} onRemoveFromList={onRemoveLocally} />)
-                        }
-                        <NoteDeleteButton noteId={note.id} onRemoveFromList={onRemoveLocally} />
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </SidebarMenuItem>)
-        }
-       </>
+        <SidebarMenuItem>
+            <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer }`}>
+                <Link href={`/notes/?noteid=${note.id}&tagid=${note.tagId}`} onClick={handleOnClickNote}>
+                    <LoadingIndicator /> {tag && <TagIcon color={tag?.color}/>}
+                    <p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText.slice(0, 20)}</p>
+                </Link>
+            </SidebarMenuButton>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <SidebarMenuAction key={note.id}>
+                        <EllipsisVertical className={`${noteId === note.id && "text-black"}`}/>
+                    </SidebarMenuAction>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="bottom">
+                    <NoteChangeTagButton noteId={note.id} tagId={tag?.id}/> 
+                    <DropdownMenuItem className="cursor-pointer justify-start" onClick={() => {
+                            setLoading(true)
+                        }}
+                    >
+                        <SquarePen /><span>Rename</span>
+                    </DropdownMenuItem>
+                    { note.isArchived ? 
+                        ((<NoteRestoreButton noteId={note.id} onRemoveFromList={onRemoveLocally} />))
+                    :
+                        (<NoteArchiveButton noteId={note.id} onRemoveFromList={onRemoveLocally} />)
+                    }
+                    <NoteDeleteButton noteId={note.id} onRemoveFromList={onRemoveLocally} />
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </SidebarMenuItem>
     )
 }
 export default NoteSideBarMenuItemActions

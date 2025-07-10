@@ -14,7 +14,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button'
-import { updateNoteArchiveAction } from '@/app/actions/notes'
+import { useNoteStore } from '@/store/noteListStore'
   
 
 interface INoteDeleteButton {
@@ -26,21 +26,33 @@ function NoteRestoreButton(props: INoteDeleteButton) {
     const { noteId, onRemoveFromList } = props
     const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
 
+    const {items: noteStoreList, updateItem: updateNoteStoreList} = useNoteStore((state) => state)
+
     const handleRestoreNote = () => {
         startTransitionToArchiveNote(async() => {   
-            const error = await updateNoteArchiveAction(noteId) // Default isArchive=false, so it will restore the note
-            if (error?.errorMessage) {
+            // Update the local store to reflect the change immediately
+            const note = noteStoreList.find((note) => note.id === noteId)
+            if (!note) {
                 toast.error("Note", {
                     position: "top-right",
-                    description: error.errorMessage
+                    description: "Note not exist"
                 });
-            } else {
+                return
+            }
+            const {id, ...data} = note
+            await updateNoteStoreList(noteId, { ...data, isArchived: false }).then(() => {
                 if (onRemoveFromList) onRemoveFromList()
                 toast.success("Note", {
                     position: "top-right",
-                    description:"Note restore successfully"
+                    description: "Note restored successfully"
                 });
-            }
+            }).catch((error) => {
+                console.error("Error updating note in store:", error);
+                toast.error("Note", {
+                    position: "top-right",
+                    description: "Failed to update note in store"
+                });
+            })
         })
     }
 
