@@ -10,12 +10,16 @@ import { toast } from 'sonner';
 import { Plus } from "lucide-react";
 import { generateNoteId } from '@/lib/utils';
 import NoteTagSideBarMenuItemActions from './NoteTagSideBarMenuItemActions';
-import { TAG_DEFAULT_COLOR, TAG_DEFAULT_NAME } from '@/lib/constants';
+import { QUERY_FILTER_PARAM, TAG_DEFAULT_COLOR, TAG_DEFAULT_NAME } from '@/lib/constants';
 import { NoteTagType } from '@/types/tags';
 import { useTagStore } from '@/store/tagListStore';
+import { useSearchParams, usePathname, useRouter } from "next/navigation"
 
 export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
-    
+    const searchParams = useSearchParams()
+    const pathname = usePathname()
+    const {replace: routerReplace} = useRouter()
+
     const {items: tagStoreList, addItem: addTagToStore, removeItem: removeTagFromStore} = useTagStore((state) => state)
     const [localTagList, setLocalTagList] = useState<NoteTagType[]>(data);
 
@@ -52,6 +56,12 @@ export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
                 position: "top-right",
                 description: `Tag has been removed.`,
             });
+            // Remove tag from search params if it exists
+            const params = new URLSearchParams(searchParams);
+            if (params.has(QUERY_FILTER_PARAM) && params.get(QUERY_FILTER_PARAM) === tagId) {
+                params.delete(QUERY_FILTER_PARAM);
+                routerReplace(`${pathname}?${params.toString()}`);
+            }
         }).catch((error) => {
             console.error("Error removing tag in store:", error);
             toast.error("Note", {
