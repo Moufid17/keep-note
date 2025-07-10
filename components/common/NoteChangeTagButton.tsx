@@ -1,5 +1,4 @@
 "use client"
-import React from 'react'
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from '../ui/dropdown-menu'
 import { useTagStore } from '@/store/tagListStore'
 import { useNoteStore } from '@/store/noteListStore'

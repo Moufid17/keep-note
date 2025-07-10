@@ -57,9 +57,10 @@ export const createNoteAction = async (noteId: string) => {
         await prismaClient.note.create({
             data: {
                 id: noteId,
-                // title: "",
+                title: "",
                 text: "",
                 authorId: currentUser.id,
+                tagId: null,
             }
         })
         return {errorMessage: null}
@@ -146,7 +147,7 @@ export const updateNoteActionDev = async (id: string, title: string="", text:str
             const errorMessages = parsedData.error.errors.map(err => err.message).join(", ");
             throw new Error(`Validation failed: ${errorMessages}`);
         }
-
+        
         const { id: noteId, title: noteTitle, text: noteText, isArchived, tagId: noteTagId } = parsedData.data
 
         await existingUser()

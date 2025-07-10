@@ -58,7 +58,6 @@ export async function getSession() {
     } = await client.auth.getSession()
 
     if (error) {
-        console.log('Error getting session:', error.message)
         return null
     }
 

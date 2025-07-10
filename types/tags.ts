@@ -7,3 +7,10 @@ export const noteTagSchema = z.object({
 })
 
 export type NoteTagType = z.infer<typeof noteTagSchema>
+
+export const noteTagUpdateSchema = z.object({
+    name: z.string().optional().default(""),
+    color: z.string().optional().default(""),
+})
+
+export type NoteTagUpdateType = z.infer<typeof noteTagUpdateSchema>

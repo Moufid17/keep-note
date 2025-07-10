@@ -21,7 +21,7 @@ export const noteSchema = z.object({
     title: z.string().optional().default(""),
     text: z.string().optional().default(""),
     isArchived: z.boolean().default(false),
-    tagId: z.string().nullable().optional().default(""),
+    tagId: z.string().min(36, "Tag id is required").nullable().default(null),
 })
 
 export type NoteType = z.infer<typeof noteSchema>
