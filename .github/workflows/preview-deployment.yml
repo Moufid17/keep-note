@@ -1,0 +1,27 @@
+name: Vercel Preview Deployment
+description: Deploys the application to Vercel for preview when changes are pushed to dev branch.
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+on:
+  push:
+    branches-ignore::
+      - main
+jobs:
+  Deploy-Preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Install Vercel Cli
+        run: npm install -g vercel@latest
+      
+      - name: Pull Vercel secrets from github
+        run:  vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build project and generate artifacts
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+    
+      - name: Deploy artifacts to Vercel
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
