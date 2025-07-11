@@ -46,6 +46,21 @@ function NoteChangeTagButton({noteId, tagId}: {noteId: string, tagId?:string}) {
         }
     }
 
+    if (storeTagList.length === 0) {
+        return (
+            <DropdownMenuGroup className="cursor-pointer justify-center">
+                <DropdownMenuSub>
+                    <DropdownMenuSubTrigger className='cursor-pointer text-start'>Tags</DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                        <DropdownMenuSubContent>
+                            <DropdownMenuItem disabled className='text-gray-500'>No tags available</DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                    </DropdownMenuPortal> 
+                </DropdownMenuSub>
+            </DropdownMenuGroup>
+        )
+    }
+
     return (
         <DropdownMenuGroup className="cursor-pointer justify-center">
             <DropdownMenuSub>

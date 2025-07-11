@@ -26,8 +26,7 @@ export const useTagStore = create<NoteTagListTypeStore>()((set, get) => ({
     const {id, name, color} = newTag
     await createTagAction(id, name, color).then((data) => {
       if ('errorMessage' in data && data.errorMessage) {
-        console.error("Error updating tag in store: ", data.errorMessage)
-        throw new Error("Failed to remove tag")
+        throw new Error(data.errorMessage ?? "Failed to add tag")
       }
       set((state) => ({ 
         items: [...state.items, { id, name, color }, ]
@@ -37,8 +36,7 @@ export const useTagStore = create<NoteTagListTypeStore>()((set, get) => ({
   removeItem: async (id: string) => {
     await deleteTagAction(id).then((data) => {
       if ('errorMessage' in data && data.errorMessage) {
-        console.error("Error updating tag in store: ", data.errorMessage)
-        throw new Error("Failed to remove tag")
+        throw new Error(data.errorMessage ?? "Failed to remove tag")
       }
       set((state) => ({
         items: state.items.filter(item => item.id !== id)
@@ -51,8 +49,7 @@ export const useTagStore = create<NoteTagListTypeStore>()((set, get) => ({
 
     await updateTagAction(id, name, color).then((data) => {
       if ('errorMessage' in data && data.errorMessage) {
-        console.error("Error updating tag in store: ", data.errorMessage)
-        throw new Error("Failed to remove tag")
+        throw new Error(data.errorMessage ?? "Failed to remove tag")
       }
       const currentItems = get().items
       const updatedItems = currentItems.map(item =>

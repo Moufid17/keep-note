@@ -37,10 +37,9 @@ export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
                 description: "Note restored successfully"
             });
         }).catch((error) => {
-            console.error("Error updating note in store:", error);
             toast.error("Note", {
-                position: "top-right",
-                description: "Failed to add tag",
+                position: "top-center",
+                description: error.message ?? "Failed to add tag",
                 duration: 6000
             });
         })
@@ -63,10 +62,9 @@ export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
                 routerReplace(`${pathname}?${params.toString()}`);
             }
         }).catch((error) => {
-            console.error("Error removing tag in store:", error);
             toast.error("Note", {
-                position: "top-right",
-                description: error?.errorMessage ?? "Failed to remove tag",
+                position: "top-center",
+                description: error.message ?? "Failed to remove tag",
             });
         })
     }

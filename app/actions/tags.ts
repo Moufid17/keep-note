@@ -32,6 +32,17 @@ export const createTagAction = async (tagId: string, name:string, color:string) 
         if (tagId.length <= 0) throw new Error("Note ID is required");
 
         const currentUser = await existingUser()
+
+        // Checck if name exists
+        await existingTag(name).then((existingTag) => {
+            if (existingTag) {
+                throw new Error(`Tag with name "${existingTag.name}" already exists`);
+            }
+        }).catch((error) => {
+            if (error.message !== "Tag name is required") {
+                throw new Error(error.message);
+            }
+        });
     
         await prismaClient.tag.create({
             data: {
@@ -105,3 +116,18 @@ const existingUser = async ()  => {
     if (!existingUser) throw new Error("User not found");
     return existingUser;
 };
+
+const existingTag = async (tagName: string) => {
+    if (tagName.length <= 0) throw new Error("Tag name is required");
+    const currentUser = await existingUser();
+    
+    const tag = await prismaClient.tag.findFirst({
+        where: { name: tagName, authorId: currentUser.id },
+        select: {
+            id: true,
+            name: true,
+            color: true,
+        }
+    });
+    return tag;
+}
