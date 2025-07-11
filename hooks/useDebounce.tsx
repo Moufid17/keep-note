@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 
-type UseDebounceType = (value: string, delay: number, callback?: () => void) => string
+type UseDebounceType = (value: string, delay: number) => string
+type UseDebounceCallBackType = (callback: (value?: string) => void, delay: number) => void
 
 /**
  * Custom hook to debounce a value.
@@ -9,19 +10,37 @@ type UseDebounceType = (value: string, delay: number, callback?: () => void) => 
  * @param callback - Optional callback to execute after the value is debounced.
  * @returns The debounced value.
  */
-const useDebounce : UseDebounceType = (value, delay, callback) => {
-    const [debounceValue, setDebounceValue] = React.useState(value)
+export const useDebounceValue : UseDebounceType = (value, delay) => {
+    const [debounceValue, setDebounceValue] = useState(value)
 
     useEffect(() => {
         const updateTimeout = setTimeout(() => {
             setDebounceValue(value)
-            if (callback) {
-                callback()
-            }
         }, delay)
         clearTimeout(updateTimeout)
-    }, [value, delay, callback])
+    }, [value, delay])
     return debounceValue
 }
 
-export default useDebounce
+/**
+ * Custom hook to debounce a value.
+ * @param callback - Execute after the value is debounced.
+ * @param delay - The delay in milliseconds.
+ * @returns A debounced callback function.
+ */
+export function useDebounceCallback<T extends (...args: any[]) => void> ( callback: T, delay: number ): (...args: Parameters<T>) => void {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const debouncedFn = useCallback((...args: Parameters<T>) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      callback(...args);
+    }, delay);
+  }, [callback, delay]);
+
+  return debouncedFn;
+}
+
