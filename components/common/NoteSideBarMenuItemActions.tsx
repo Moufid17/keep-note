@@ -19,13 +19,16 @@ import { NoteTagType } from "@/types/tags"
 import { NoteType } from "@/types/notes"
 import NoteChangeTagButton from "./NoteChangeTagButton"
 import { useNoteStore } from "@/store/noteListStore"
+import { QUERY_FILTER_PARAM, QUERY_NOTE_PARAM, QUERY_SEARCH_PARAM, QUERY_TAG_PARAM } from "@/lib/constants"
 interface INoteSideBar {
     note: NoteType
     onRemoveLocally?: () => void
 }
 
 const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
-    const noteId = useSearchParams().get("noteid") ?? ""
+    const noteId = useSearchParams().get(QUERY_NOTE_PARAM) ?? ""
+    const searchParam = useSearchParams().get(QUERY_SEARCH_PARAM) ?? ""
+    const filterParam = useSearchParams().get(QUERY_FILTER_PARAM) ?? ""
     const { note, onRemoveLocally } = props
     const {items: noteListStore, updateItem: updateNoteStoreList} = useNoteStore((state) => state)
     
@@ -68,10 +71,9 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
                     description:"Note renamed successfully"
                 });
             }).catch((error) => {
-                console.error("Error updating note in store:", error);
                 toast.error("Note", {
-                    position: "top-right",
-                    description: error.errorMessage ?? "Failed to update note"
+                    position: "top-center",
+                    description: error.message ?? "Failed to update note"
                 });
             })
         })
@@ -115,7 +117,10 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
     return (
         <SidebarMenuItem>
             <SidebarMenuButton asChild className={`${noteId === note.id && "bg-brand-100 text-black"} cursor-pointer }`}>
-                <Link href={`/notes/?noteid=${note.id}&tagid=${note.tagId}`} onClick={handleOnClickNote}>
+                <Link 
+                    href={`/notes/?${QUERY_NOTE_PARAM}=${note.id}&${QUERY_TAG_PARAM}=${note.tagId}&${QUERY_SEARCH_PARAM}=${searchParam}&${QUERY_FILTER_PARAM}=${filterParam}`} 
+                    onClick={handleOnClickNote}
+                >
                     <LoadingIndicator /> {tag && <TagIcon color={tag?.color}/>}
                     <p className="truncate">{localNoteTitle.length > 0 ? localNoteTitle : noteText.slice(0, 20)}</p>
                 </Link>
