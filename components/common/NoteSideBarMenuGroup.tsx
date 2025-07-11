@@ -4,7 +4,6 @@ import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu } fro
 import NoteSideBarMenuItemActions from "@/components/common/NoteSideBarMenuItemActions"
 import { ChevronDown } from "lucide-react"
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { NoteType } from "@/types/notes"
 
 type NoteSideBarMenuGroupProps = {
@@ -15,25 +14,12 @@ type NoteSideBarMenuGroupProps = {
 
 
 const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
-    const router = useRouter();
     const { title, notes, defaultOpen } = props
     const [localNotes, setLocalNotes] = useState<NoteType[]>(notes);
 
     if (notes !== localNotes) {
         setLocalNotes(notes);       
     }
-
-    const handleRemoveNoteFromCurrentLocalList = (noteId: string) => {
-        const updatedNotes = localNotes.filter((note) => note.id !== noteId);
-        setLocalNotes(updatedNotes);
-        
-        if (updatedNotes.length >= 1 && !updatedNotes[0].isArchived === false) {
-            // Redirect to the first note in the list if it exists and is not archived
-            router.replace(`/notes/?noteid=${updatedNotes[0]?.id}`)
-        } else {
-            router.replace(`/notes`)
-        }
-    };
 
     return (
         <Collapsible className="group/collapsible" defaultOpen={defaultOpen}>
@@ -48,9 +34,7 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
                     <SidebarGroupContent className="lg:pl-2 h-60 lg:min-h-auto overflow-y-auto overflow-x-hidden">
                         <SidebarMenu>
                             {localNotes.map((note: NoteType) => 
-                                    <NoteSideBarMenuItemActions key={`${note.id}`} note={note}
-                                        onRemoveLocally={() => handleRemoveNoteFromCurrentLocalList(note.id)}
-                                    />
+                                    <NoteSideBarMenuItemActions key={`${note.id}`} note={note} />
                                 )
                             }
                         </SidebarMenu>

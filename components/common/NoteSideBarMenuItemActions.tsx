@@ -22,14 +22,13 @@ import { useNoteStore } from "@/store/noteListStore"
 import { QUERY_FILTER_PARAM, QUERY_NOTE_PARAM, QUERY_SEARCH_PARAM, QUERY_TAG_PARAM } from "@/lib/constants"
 interface INoteSideBar {
     note: NoteType
-    onRemoveLocally?: () => void
 }
 
 const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
     const noteId = useSearchParams().get(QUERY_NOTE_PARAM) ?? ""
     const searchParam = useSearchParams().get(QUERY_SEARCH_PARAM) ?? ""
     const filterParam = useSearchParams().get(QUERY_FILTER_PARAM) ?? ""
-    const { note, onRemoveLocally } = props
+    const { note } = props
     const {items: noteListStore, updateItem: updateNoteStoreList} = useNoteStore((state) => state)
     
     const { noteText: selectedNoteText } = useNote();
@@ -140,11 +139,11 @@ const NoteSideBarMenuItemActions = (props: INoteSideBar) => {
                         <SquarePen /><span>Rename</span>
                     </DropdownMenuItem>
                     { note.isArchived ? 
-                        ((<NoteRestoreButton noteId={note.id} onRemoveFromList={onRemoveLocally} />))
+                        ((<NoteRestoreButton noteId={note.id} />))
                     :
-                        (<NoteArchiveButton noteId={note.id} onRemoveFromList={onRemoveLocally} />)
+                        (<NoteArchiveButton noteId={note.id} />)
                     }
-                    <NoteDeleteButton noteId={note.id} onRemoveFromList={onRemoveLocally} />
+                    <NoteDeleteButton noteId={note.id} />
                 </DropdownMenuContent>
             </DropdownMenu>
         </SidebarMenuItem>

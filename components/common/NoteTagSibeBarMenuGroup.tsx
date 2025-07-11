@@ -20,7 +20,7 @@ export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
     const pathname = usePathname()
     const {replace: routerReplace} = useRouter()
 
-    const {items: tagStoreList, addItem: addTagToStore, removeItem: removeTagFromStore} = useTagStore((state) => state)
+    const {addItem: addTagToStore, removeItem: removeTagFromStore} = useTagStore((state) => state)
     const [localTagList, setLocalTagList] = useState<NoteTagType[]>(data);
 
     const handleAddTag = useCallback(async () => {
@@ -43,7 +43,7 @@ export function NoteTagSibeBarMenuGroup({data}:{data: NoteTagType[]}) {
                 duration: 6000
             });
         })
-    }, [setLocalTagList])
+    }, [addTagToStore, setLocalTagList])
     
 
     const handleRemoveTag = async (tagId: string) => {

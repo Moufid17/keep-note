@@ -19,11 +19,10 @@ import { useNoteStore } from '@/store/noteListStore'
 
 interface INoteDeleteButton {
     noteId: string
-    onRemoveFromList?: () => void
 }
 
 function NoteDeleteButton(props: INoteDeleteButton) {
-    const { noteId, onRemoveFromList } = props
+    const { noteId } = props
     const {removeItem: removeNoteFromStore} = useNoteStore((state) => state)
     const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
 

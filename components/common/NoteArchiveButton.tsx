@@ -19,11 +19,10 @@ import { useNoteStore } from '@/store/noteListStore'
 
 interface INoteArchiveButton {
     noteId: string
-    onRemoveFromList?: () => void
 }
 
 function NoteArchiveButton(props: INoteArchiveButton) {
-    const { noteId, onRemoveFromList } = props
+    const { noteId } = props
     const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
 
     const {items: noteStoreList, updateItem: updateNoteStoreList} = useNoteStore((state) => state)
@@ -39,8 +38,7 @@ function NoteArchiveButton(props: INoteArchiveButton) {
                 return
             }
             const {id, ...data} = note
-            await updateNoteStoreList(noteId, { ...data, isArchived: true }).then(() => {
-                if (onRemoveFromList) onRemoveFromList()
+            await updateNoteStoreList(id, { ...data, isArchived: true }).then(() => {
                 toast.success("Note", {
                     position: "top-right",
                     description: "Note restored successfully"

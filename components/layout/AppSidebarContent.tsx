@@ -27,11 +27,11 @@ export function AppSidebarContent({query, filter}: {query: string, filter: strin
         return () => { ignore = true; };
     }, [getNoteStoreList, getTagStoreList])
 
-    const fuseOptions = {
+    const fuseOptions = useMemo(() => {return {
         keys: ["title", "tagId"],
         threshold: 0.2,
-    }
-    const fuse = new Fuse(noteStoreList, fuseOptions);
+    }}, []);
+    const fuse = useMemo(() => new Fuse(noteStoreList, fuseOptions), [noteStoreList, fuseOptions]);
 
     const filteredItems : NoteType[] = useMemo(() => {
         let data : NoteType[] = noteStoreList
@@ -59,7 +59,7 @@ export function AppSidebarContent({query, filter}: {query: string, filter: strin
             // or // data = data.filter(item => item.tagId === filter)
         }
         return data
-    }, [query, filter, noteStoreList]);
+    }, [fuse, query, filter, noteStoreList]);
 
     const archivedItems = useMemo(() => filteredItems.filter(item => item.isArchived), [filteredItems]);
     const unarchivedItems = useMemo(() => filteredItems.filter(item => !item.isArchived), [filteredItems]);

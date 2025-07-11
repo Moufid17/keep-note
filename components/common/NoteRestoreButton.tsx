@@ -17,13 +17,12 @@ import { Button } from '@/components/ui/button'
 import { useNoteStore } from '@/store/noteListStore'
   
 
-interface INoteDeleteButton {
+interface INoteRestoreButton {
     noteId: string
-    onRemoveFromList?: () => void
 }
 
-function NoteRestoreButton(props: INoteDeleteButton) {
-    const { noteId, onRemoveFromList } = props
+function NoteRestoreButton(props: INoteRestoreButton) {
+    const { noteId } = props
     const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
 
     const {items: noteStoreList, updateItem: updateNoteStoreList} = useNoteStore((state) => state)
@@ -40,8 +39,7 @@ function NoteRestoreButton(props: INoteDeleteButton) {
                 return
             }
             const {id, ...data} = note
-            await updateNoteStoreList(noteId, { ...data, isArchived: false }).then(() => {
-                if (onRemoveFromList) onRemoveFromList()
+            await updateNoteStoreList(id, { ...data, isArchived: false }).then(() => {
                 toast.success("Note", {
                     position: "top-right",
                     description: "Note restored successfully"

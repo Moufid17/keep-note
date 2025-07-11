@@ -31,7 +31,7 @@ function NewNoteButton() {
         })
         
         setIsLoading(false);
-    }, [router]);
+    }, [addNoteStore, router]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
