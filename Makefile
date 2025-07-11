@@ -29,8 +29,14 @@ logs:
 dbreset:
 	docker compose exec server npx prisma db push --force-reset # Not to be used in your production environment : to push the initial schema to the database. --force-reset to ignore the current state of the database and apply the schema from scratch.
 
+dbset:
+	docker compose exec server npx prisma db push # Not to be used in your production environment : to push the initial schema to the database. --force-reset to ignore the current state of the database and apply the schema from scratch.
+
 dbupdate:
-	docker compose exec server npx prisma migrate dev --create-only  # To create a new migration based on the changes you made to your Prisma schema.
+	docker compose exec server npx prisma migrate dev  # To create a new migration based on the changes you made to your Prisma schema.
+
+dbstatus:
+	docker compose exec server npx prisma migrate status
 
 dpm:
 	docker compose exec server npx prisma migrate dev --name $(name) # To create a new migration based on the changes you made to your Prisma schema.
