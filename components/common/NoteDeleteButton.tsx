@@ -35,10 +35,9 @@ function NoteDeleteButton(props: INoteDeleteButton) {
                     description: `Tag has been removed.`,
                 });
             }).catch((error) => {
-                console.error("Error removing tag in store:", error);
                 toast.error("Note", {
-                    position: "top-right",
-                    description: error?.errorMessage ?? "Failed to remove tag",
+                    position: "top-center",
+                    description: error.message ?? "Failed to remove tag",
                 });
             })
         })

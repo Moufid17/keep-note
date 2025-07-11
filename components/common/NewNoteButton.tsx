@@ -24,10 +24,9 @@ function NewNoteButton() {
             });
             router.push(`/notes/?${QUERY_NOTE_PARAM}=${uuid}&${QUERY_TAG_PARAM}=null`);
         }).catch((error) => {
-            console.error("Error adding note in store:", error);
             toast.error("Note", {
-                position: "top-right",
-                description: error?.errorMessage ?? "Failed to add note",
+                position: "top-center",
+                description: error.message ?? "Failed to add note",
             });
         })
         

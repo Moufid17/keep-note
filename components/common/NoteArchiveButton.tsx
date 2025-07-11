@@ -46,10 +46,9 @@ function NoteArchiveButton(props: INoteArchiveButton) {
                     description: "Note restored successfully"
                 });
             }).catch((error) => {
-                console.error("Error updating note in store:", error);
                 toast.error("Note", {
-                    position: "top-right",
-                    description: error.errorMessage ?? "Failed to update note"
+                    position: "top-center",
+                    description: error.message ?? "Failed to update note"
                 });
             })
         })

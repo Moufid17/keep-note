@@ -47,10 +47,10 @@ function NoteRestoreButton(props: INoteDeleteButton) {
                     description: "Note restored successfully"
                 });
             }).catch((error) => {
-                console.error("Error updating note in store:", error);
                 toast.error("Note", {
-                    position: "top-right",
-                    description: "Failed to update note in store"
+                    position: "top-center",
+                    description: error.message ?? "Failed to update note in store",
+                    duration: 6000
                 });
             })
         })

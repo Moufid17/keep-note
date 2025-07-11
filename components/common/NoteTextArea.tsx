@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useTagStore } from '@/store/tagListStore';
 import { NoteTagType } from '@/types/tags';
 import { useNoteStore } from '@/store/noteListStore';
+import { toast } from 'sonner';
 
 type Props = {
   noteId: string;
@@ -29,14 +30,15 @@ function NoteTextArea({ noteId, startingNoteText }: Props) {
 
     clearTimeout(updateTimeout);
     updateTimeout = setTimeout(async() => {
-      
       const data = noteStoreList.find(note => note.id === noteId);
-      if (!data) {
-        console.error("Note not found in store:", noteId);
-        return;
-      }
-      await updateNoteStoreList(noteId, { ...data, text:value }).catch((error) => {
-        console.error("Error updating note in store:", error);
+      if (!data) return
+      await updateNoteStoreList(noteId, { ...data, text:value })
+      .catch((error) => {
+        toast.error("Note", {
+          position: "top-center",
+          description: error.message ?? "Failed to update note",
+          duration: 6000
+        });  
       })
     }, 1500);
   }
