@@ -9,13 +9,12 @@
         "requireBranch": "main",
         "requireCleanWorkingDir": true,
         "commit": true,
-        "commitMessage": "🎉 release ${version}",
+        "commitMessage": "🎉 Release ${version}",
         "tag": true,
         "tagName": "v${version}",
         "push": true
     },
     "github": {
-        "release": true,
-        "tokenRef": "GITHUB_TOKEN"
+        "release": true
     }
 }
