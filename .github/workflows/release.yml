@@ -2,7 +2,7 @@ name: Release
 on: 
   workflow_dispatch:
 jobs:
-  releaseBuild:
+  release-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -14,7 +14,7 @@ jobs:
       - name: Run build
         run: npm run build
   release:
-    needs: releaseBuild
+    needs: release-build
     runs-on: ubuntu-latest
     permissions:
       contents: write 
