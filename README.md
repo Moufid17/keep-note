@@ -1,3 +1,9 @@
+![CI](https://github.com/Moufid17/keep-note/actions/workflows/ci.yml/badge.svg)
+![Preview Deployment](https://github.com/Moufid17/keep-note/actions/workflows/preview-deployment.yml/badge.svg)
+![Production Deployment](https://github.com/Moufid17/keep-note/actions/workflows/production-deployment.yml/badge.svg)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Moufid17/keep-note)
+
+
 # Keep Note
 
 Keep Note is a simple and efficient note-taking application designed to help you organize your thoughts and ideas.
