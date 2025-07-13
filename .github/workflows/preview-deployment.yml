@@ -1,19 +1,29 @@
-name: Vercel Preview Deployment
+name: Preview Deployment
 description: Deploys the application to Vercel for preview when changes are pushed to dev branch.
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on:
-  push:
-    branches-ignore::
-      - main
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches-ignores: [main]
+    
 jobs:
   Deploy-Preview:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       
+      - name: Notify GitHub deployment start
+        uses: bobheadxi/deployments@v1
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: preview
+
       - name: Install Vercel Cli
         run: npm install -g vercel@latest
       
@@ -25,3 +35,12 @@ jobs:
     
       - name: Deploy artifacts to Vercel
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+
+
+      - name: Notify GitHub deployment success
+        uses: bobheadxi/deployments@v1
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: success
+          env: preview

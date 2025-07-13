@@ -1,0 +1,21 @@
+{
+    "plugins": {
+        "@release-it/conventional-changelog": {
+            "preset": "conventionalcommits",
+            "infile": "CHANGELOG.md"
+        }
+    },
+    "git": {
+        "requireBranch": "main",
+        "requireCleanWorkingDir": true,
+        "commit": true,
+        "commitMessage": "🎉 release ${version}",
+        "tag": true,
+        "tagName": "v${version}",
+        "push": true
+    },
+    "github": {
+        "release": true,
+        "tokenRef": "GITHUB_TOKEN"
+    }
+}

@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "release -i"   : "release-it --ci",
+    "release ma -i": "release-it major --ci",
+    "release p -i" : "release-it patch --ci",
+    "release mi -i": "release-it minor --ci"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
