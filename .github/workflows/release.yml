@@ -23,7 +23,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 # necessary to reach commit history for tagging and auto generation of release notes by using conventional commits# nécessaire pour push le tag et créer une release
-         
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+          cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
 
