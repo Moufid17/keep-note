@@ -16,12 +16,13 @@ jobs:
       contents: write
       deployments: write
       statuses: write
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       
       - name: Notify GitHub deployment start
+        id: preview-deployment-start
         uses: bobheadxi/deployments@v1
         with:
           step: start
@@ -46,5 +47,6 @@ jobs:
         with:
           step: finish
           token: ${{ secrets.GITHUB_TOKEN }}
-          status: success
           env: preview
+          deployment_id: ${{ steps.preview-deployment-start.outputs.deployment_id }}
+          status: success
