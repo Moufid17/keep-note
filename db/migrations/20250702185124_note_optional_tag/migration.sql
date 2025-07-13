@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Note" ALTER COLUMN "tagId" DROP DEFAULT;

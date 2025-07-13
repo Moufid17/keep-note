@@ -14,56 +14,53 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button'
-import { updateNoteArchiveAction } from '@/app/actions/notes'
+import { useNoteStore } from '@/store/noteListStore'
   
 
 interface INoteDeleteButton {
     noteId: string
-    onDeleteLocally?: () => void
 }
 
 function NoteDeleteButton(props: INoteDeleteButton) {
-    const { noteId, onDeleteLocally } = props
+    const { noteId } = props
+    const {removeItem: removeNoteFromStore} = useNoteStore((state) => state)
     const [isPendingToArchiveNote, startTransitionToArchiveNote] = useTransition()
 
-    const handleArchiveNote = () => {
+    const handleDeleteNote = () => {
         startTransitionToArchiveNote(async() => {   
-            const error = await updateNoteArchiveAction(noteId, true)
-            if (error?.errorMessage) {
+            await removeNoteFromStore(noteId).then(() => {
+                toast.success("Tag", {
+                    position: "top-right",
+                    description: `Tag has been removed.`,
+                });
+            }).catch((error) => {
                 toast.error("Note", {
-                    position: "top-right",
-                    description: error.errorMessage,
-                    duration: 6000
+                    position: "top-center",
+                    description: error.message ?? "Failed to remove tag",
                 });
-            } else {
-                if(onDeleteLocally) onDeleteLocally()
-                toast.success("Note", {
-                    position: "top-right",
-                    description:"Note archived successfully"
-                });
-            }
+            })
         })
     }
 
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" className="cursor-pointer w-full text-red-500 hover:text-red-500">
-                    <Trash2 className="py-0"/><span className='text-left'>Archive</span>
+                <Button variant="ghost" className="cursor-pointer w-full text-red-500 hover:text-red-500 justify-start">
+                    <Trash2 className="py-0"/><span className='text-left'>Delete</span>
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                    This action cannot be undone. This will permanently archive this note.
-                </AlertDialogDescription>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete this note.
+                    </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                <AlertDialogCancel>Ignore</AlertDialogCancel>
-                <AlertDialogAction onClick={handleArchiveNote} disabled={isPendingToArchiveNote} className='bg-red-500  hover:bg-red-500'>
-                    <span className="text-black hover:text-gray-600">Archive</span>
-                </AlertDialogAction>
+                    <AlertDialogCancel>Ignore</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDeleteNote} disabled={isPendingToArchiveNote} className='bg-red-500  hover:bg-red-500'>
+                        <span className="text-black hover:text-gray-600">Delete</span>
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

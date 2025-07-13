@@ -5,17 +5,15 @@ import { Button } from '../ui/button'
 function WelcomePageHeroSection() {
     return (
         <section className="container mx-auto px-4 py-16 md:py-24 mb-34">
-            <div className="flex flex-col md:flex-row items-center h-full">
+            <div className="flex flex-col md:flex-row items-start md:items-center h-full">
                 <div className="md:w-1/2 mb-10 md:mb-0 md:pr-8">
-                    {/* <h1 className="typewriter-animation xl:whitespace-nowrap text-4xl md:text-5xl font-bold leading-tight mb-6"> */}
-                    <h1 className="typewriter-animation xl:whitespace-nowrap text-4xl md:text-5xl font-bold text-left inline-block mb-6">
+                    <h1 className="typewriter-animation xl:whitespace-nowrap text-3xl md:text-4xl font-bold text-left inline-block mb-6">
                         Your Notes, <span className="gradient-text">Smarter</span> Than Ever
                     </h1>
-                    <p className="text-3xl mb-4">
-                        {/* NoteIt combines powerful note-taking with AI assistance. Organize, search, and get insights from your notes effortlessly. */}
+                    <p className="text-lg lg:text-2xl xl:text-3xl mb-4">
                         NoteIt combines powerful <span className='underline'>speech note-taking</span> with <span className='underline'>AI assistance</span>.
                     </p>
-                    <p className='relative inline-block font-bold overflow-hidden h-[1.5em] mb-8 text-2xl'>
+                    <p className='relative inline-block font-bold overflow-hidden h-[1.5em] mb-8 text-lg lg:text-2xl xl:text-3xl'>
                         <span className='animate-text-roll block sm:text-center md:text-left leading-[1.5em]'>
                             <span className='block'><span className="text-brand-500">Express </span>your thoughts effortlessly.</span>
                             <span className='block'><span className="text-brand-500">Organize </span>your notes seamlessly.</span>

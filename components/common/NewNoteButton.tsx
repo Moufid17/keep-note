@@ -2,38 +2,36 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation';
-import { createNoteAction } from '@/app/actions/notes';
 import { toast } from 'sonner';
 import { generateNoteId } from '@/lib/utils';
+import { useNoteStore } from '@/store/noteListStore';
+import { QUERY_NOTE_PARAM, QUERY_TAG_PARAM } from '@/lib/constants';
 
 
 function NewNoteButton() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const {addItem: addNoteStore} = useNoteStore((state) => state)
     
     const handleClickNewNoteButton = useCallback(async () => {
         setIsLoading(true);
-
         const uuid : string = generateNoteId();
-        const error = await createNoteAction(uuid);
-        if (error) {
-            if (error.errorMessage) {
-                toast.error("Note", {
-                    position: "top-right",
-                    description: error?.errorMessage,
-                    duration: 6000
-                });
-            } else {
-                toast.success("Note", {
-                    position: "top-right",
-                    description:"Note created successfully"
-                });
-                router.push(`/notes/?noteId=${uuid}`);
-            }
-        }
+
+        await addNoteStore(uuid).then(() => {
+            toast.success("Note", {
+                position: "top-right",
+                description:"Note created successfully"
+            });
+            router.push(`/notes/?${QUERY_NOTE_PARAM}=${uuid}&${QUERY_TAG_PARAM}=null`);
+        }).catch((error) => {
+            toast.error("Note", {
+                position: "top-center",
+                description: error.message ?? "Failed to add note",
+            });
+        })
         
         setIsLoading(false);
-    }, [router]);
+    }, [addNoteStore, router]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {

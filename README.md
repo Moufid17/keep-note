@@ -7,21 +7,26 @@ Use AI to resume your note(s)
 ![Demo](public/demo.gif)
 
 ## Features
-
-- [x] CRUD  note
-- [x]  Note archiving
-    - [x] List of normal notes
-    - [x] List of notes archived
-- [*] Search functionality to quickly find a note<span style="color: green;"> **[Coming Soon]**</span>.
-- [ ] AI to ask anything about
+- [ ] `AI to ask anything about`
     - [x] a note : Maximum `10 questions Starter Plan`
-    - [ ] a list of notes selected : `unlimited questions` <span style="color: green;"> **[Coming Soon]**</span><span style="color: gold;"> **(Premium version)**</span>
     - [x] voice to ask a question<span style="color: gold;"> **(Premium version)**</span>
+    - [ ] a list of notes selected : `unlimited questions` <span style="color: green;"> **[Coming Soon]**</span><span style="color: gold;"> **(Premium version)**</span>
+    
+
+- [x] Attribute Tag to your notes<span style="color: gold;"> **(Premium version)**</span>.
+    - [x] CRUD tag
+    - [x] Tag color
+    - [x] Attribute tag to a note
+- [x] `Search and Filter` functionality to quickly find a note or tag's note list<span style="color: gold;"> **(Premium version)**</span>.
+- [x] CRUD and `Archive` note
+- [ ] <span style="color: SaddleBrown;"> **Note remider**</span><span style="color: green;"> **[Coming Soon]**</span><span style="color: gold;"> **(Premium version)**</span>
+- [ ] <span style="color: SaddleBrown;"> **Export (pdf) or share (social) note**</span><span style="color: green;"> **[Coming Soon]**</span><span style="color: gold;"> **(Premium version)**</span>
 - [ ] <span style="color: SaddleBrown;"> **Mobile app (Pwa)**</span><span style="color: green;"> **[Coming Soon]**</span>
-- [ ] Organize notes with tags<span style="color: green;"> **[Coming Soon]**</span><span style="color: gold;"> **(Premium version)**</span>.
 - [x][SEO](https://vercel.com/moufids-projects-7c2d1e82/eblog/F1BrM7v3PnnGTVshoh6XwFQUzoV7/og)
-- [ ] [Policies](https://supabase.com/dashboard/project/mmjhsaeghpanhtoqbhik/auth/policies)
-- [ ] [cookies]()
+
+- [ ][Policies](https://supabase.com/dashboard/project/mmjhsaeghpanhtoqbhik/auth/policies)
+- [ ][cookies]()
+
 ## Pages
 - Landing page
 - User dashboard page
@@ -74,5 +79,3 @@ Contributions are welcome! Please follow these steps:
 This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgments
-
-

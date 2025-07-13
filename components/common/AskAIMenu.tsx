@@ -26,7 +26,7 @@ import { ErrorResponse } from "@/lib/utils";
 import VoiceButton from "./VoiceButton";
 
 function AskAIMenu() {
-    const noteIdParam = useSearchParams().get("noteId") || "";
+    const noteIdParam = useSearchParams().get("noteid") || "";
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
@@ -128,7 +128,7 @@ function AskAIMenu() {
                         }}>
                             Ask AI <span className="text-gray-600 dark:bg-black border rounded-sm px-1">Ctrl + I</span>
                         </DropdownMenuItem>
-                <DropdownMenuItem disabled>Ask AI(Selects/All)<sup className="border p-1.5 rounded-sm  bg-brand-400">Comming soon</sup></DropdownMenuItem>
+                <DropdownMenuItem disabled>Ask AI(All)<sup className="border p-1.5 rounded-sm  bg-brand-400">Comming soon</sup></DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
             <Dialog open={openDialog} onOpenChange={handleAskAIButtonClick}>

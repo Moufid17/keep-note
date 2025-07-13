@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -13,6 +14,8 @@ model Note {
   text      String
   author    User       @relation(fields: [authorId], references: [id])
   authorId  String
+  tag       Tag?       @relation(fields: [tagId], references: [id])
+  tagId     String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt @default(now())
   isArchived Boolean   @default(false)
@@ -22,6 +25,16 @@ model User {
   id    String         @id @default(uuid())
   email String         @unique
   notes Note[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt @default(now())
+}
+
+model Tag {
+  id        String     @id @default(uuid())
+  name      String
+  color     String     
+  notes     Note[]
+  authorId  String
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt @default(now())
 }

@@ -1,28 +1,36 @@
 import React from 'react'
 
-import NoteProvider from '@/providers/NoteProvider'
-import AskAIMenu from "@/components/common/AskAIMenu";
-import NewNoteButton from "@/components/common/NewNoteButton";
-import NoteTextArea from "@/components/common/NoteTextArea";
-import { generateNoteId } from "@/lib/utils";
+import { redirect } from 'next/navigation'
 import { prismaClient } from "@/db/prisma";
 import { getUser } from "@/auth/server";
-import { AppSidebar } from '@/components/layout/AppSidebar';
+import { generateNoteId } from "@/lib/utils";
+import NoteProvider from '@/providers/NoteProvider'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import AppHeader from '@/components/layout/AppHeader';
+import { AppSidebar } from '@/components/layout/AppSidebar';
+import NoteTextArea from "@/components/common/NoteTextArea";
+import AskAIMenu from "@/components/common/AskAIMenu";
+import NewNoteButton from "@/components/common/NewNoteButton";
 
 
-type Props = {
+type PropsType = {
   searchParams: Promise<{
-    [key: string]: string | string[] | undefined;
+    noteid?: string
+    tagid?: string
+    tags?:string
+    query?: string
   }>;
 };
 
-export default async function HomePage({ searchParams }: Props){
+export default async function HomePage(props : PropsType){
     const user = await getUser();
-    const nodeIdParam = (await searchParams).noteId || "";
+    if (!user) redirect('/login')
     
-    let noteId = (Array.isArray(nodeIdParam)) ? nodeIdParam[0] : nodeIdParam;
+    const searchParams = await props.searchParams;
+    
+    const noteIdParam = searchParams.noteid || "";
+    
+    let noteId = noteIdParam;
     if (noteId.length === 0) noteId = generateNoteId()
 
     const note = await prismaClient.note.findUnique({
@@ -34,19 +42,20 @@ export default async function HomePage({ searchParams }: Props){
             text: true,
         }
     });
+
     return (
         <NoteProvider>
             <SidebarProvider>
-                <AppSidebar />
+                <AppSidebar key={user.id}/>
                 <SidebarInset className="overflow-hidden pt-0">
                     <AppHeader />
                     <div className="flex flex-col items-center w-full h-[85vh] mt-34">
                         <div className="w-full max-w-4xl flex flex-col justify-center gap-4 p-2">
                             <div className="flex gap-4 justify-end items-center">
                                 <AskAIMenu />
-                                <NewNoteButton />
+                                <NewNoteButton key={noteId}/>
                             </div>
-                            <NoteTextArea noteId={noteId} startingNoteText={note ? note.text : ""}/>       
+                            <NoteTextArea key={noteId} noteId={noteId} startingNoteText={note ? note.text : ""}/>       
                         </div>
                     </div>
                 </SidebarInset>

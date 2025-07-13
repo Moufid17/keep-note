@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "release -i": "release-it --ci",
+    "release ma -i": "release-it major --ci",
+    "release p -i": "release-it patch --ci",
+    "release mi -i": "release-it minor --ci"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -16,6 +20,7 @@
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-dropdown-menu": "^2.1.12",
     "@radix-ui/react-label": "^2.1.4",
+    "@radix-ui/react-popover": "^1.1.14",
     "@radix-ui/react-separator": "^1.1.4",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.4",
@@ -25,21 +30,25 @@
     "@types/dom-speech-recognition": "^0.0.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "fuse.js": "^7.1.0",
     "lucide-react": "^0.503.0",
     "next": "15.3.1",
     "next-themes": "^0.4.6",
     "openai": "^5.1.1",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
+    "react-colorful": "^5.6.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.1",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "^4.1.5",
-    "zod": "^3.24.3"
+    "zod": "^3.24.3",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@release-it/conventional-changelog": "^10.0.1",
     "@types/node": "^20.17.32",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -48,6 +57,7 @@
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.7.0",
+    "release-it": "^19.0.3",
     "ts-node": "^10.9.2",
     "tw-animate-css": "^1.2.8",
     "typescript": "^5.8.3"

@@ -3,41 +3,27 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu } from "@/components/ui/sidebar"
 import NoteSideBarMenuItemActions from "@/components/common/NoteSideBarMenuItemActions"
 import { ChevronDown } from "lucide-react"
-import { NoteListSibeBarProps } from "@/components/layout/AppSidebar"
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { NoteType } from "@/types/notes"
 
 type NoteSideBarMenuGroupProps = {
     title: string
     defaultOpen?: boolean
-    notes: NoteListSibeBarProps[]
+    notes: NoteType[]
 }
 
 
 const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
-    const router = useRouter();
     const { title, notes, defaultOpen } = props
-    const [localNotes, setLocalNotes] = useState(notes);
-    const [editingNoteId, setEditingNoteId] = useState<string|null>(null);
+    const [localNotes, setLocalNotes] = useState<NoteType[]>(notes);
 
-    useEffect(() => {
-        setLocalNotes(notes);
-    }, [notes]);
-
-    const handleRemoveNoteFromCurrentListLocally = (noteId: string) => {
-        const updatedNotes = localNotes.filter((note) => note.id !== noteId);
-        setLocalNotes(updatedNotes);
-        
-        if (updatedNotes.length >= 1) {
-            router.replace(`/notes/?noteId=${updatedNotes[0]?.id}`)
-        } else {
-            router.replace(`/notes`)
-        }
-    };
+    if (notes !== localNotes) {
+        setLocalNotes(notes);       
+    }
 
     return (
         <Collapsible className="group/collapsible" defaultOpen={defaultOpen}>
-            <SidebarGroup>
+            <SidebarGroup className="py-0">
                 <SidebarGroupLabel asChild>
                     <CollapsibleTrigger className="pr-0">
                         {title}
@@ -45,14 +31,10 @@ const NoteSideBarMenuGroup = (props : Readonly<NoteSideBarMenuGroupProps>) => {
                     </CollapsibleTrigger>
                 </SidebarGroupLabel>
                 <CollapsibleContent>
-                    <SidebarGroupContent className="pl-2">
+                    <SidebarGroupContent className="lg:pl-2 h-60 lg:min-h-auto overflow-y-auto overflow-x-hidden">
                         <SidebarMenu>
-                            {localNotes.map((note: NoteListSibeBarProps) => 
-                                    <NoteSideBarMenuItemActions key={`${note.id}`} note={note}
-                                        onDeleteLocally={() => handleRemoveNoteFromCurrentListLocally(note.id)}
-                                        editingNoteId={editingNoteId}
-                                        setEditingNoteId={(id: string|null) => setEditingNoteId(id)}
-                                    />
+                            {localNotes.map((note: NoteType) => 
+                                    <NoteSideBarMenuItemActions key={`${note.id}`} note={note} />
                                 )
                             }
                         </SidebarMenu>

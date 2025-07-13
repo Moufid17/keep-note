@@ -14,10 +14,12 @@ export async function GET(request: NextRequest) {
     },
     select: {
       id: true,
+      tagId: true,
     },
   });
 
   return NextResponse.json({
     newestNoteId: newestNoteId?.id,
+    newestNoteTagId: newestNoteId?.tagId || null,
   });
 }

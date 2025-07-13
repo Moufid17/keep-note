@@ -1,35 +1,66 @@
 "use server"
 import { getUser } from '@/auth/server';
 import { prismaClient } from '@/db/prisma'
-import { handleError } from '@/lib/utils';
+import { ErrorResponse, handleError } from '@/lib/utils';
+import { noteSchema, NoteType, schemaNoteAskAIAction } from '@/types/notes';
 
 import {OpenAI} from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
-import { z } from "zod";
+
+
+const existingUser = async ()  => {
+    // User from supabase auth
+    const user = await getUser();
+    if (!user) throw new Error("User not found");
+
+    // User from database
+    const existingUser = await prismaClient.user.findUnique({
+        where: { email: user.email },
+        select: {
+            id: true,
+            email: true,
+        }
+    });
+    if (!existingUser) throw new Error("User not found");
+    return existingUser;
+};
+
+export const getNotesAction = async () : Promise<ErrorResponse| NoteType[]>=> {
+    try {
+        const currentUser = await existingUser()
+        const notes : NoteType[] = await prismaClient.note.findMany({
+            where: { author: {email: currentUser.email}, },
+            select: {
+                id: true,
+                title: true,
+                text: true,
+                tagId: true,
+                isArchived: true,
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+        noteSchema.array().safeParseAsync(notes)
+        return notes
+    } catch (error) {
+        return handleError(error);
+    }
+}
 
 export const createNoteAction = async (noteId: string) => {
     try {
         if (noteId.length <= 0) throw new Error("Note ID is required");
 
-        // User from supabase auth
-        const user = await getUser();
-        if (!user) throw new Error("User not found");
-
-        // User from database
-        const existingNote = await prismaClient.user.findUnique({
-            where: { email: user.email },
-            select: {
-                id: true,
-            }
-        });
-        if (!existingNote) throw new Error("User not found");
+        const currentUser = await existingUser()
     
         await prismaClient.note.create({
             data: {
                 id: noteId,
-                // title: "",
+                title: "",
                 text: "",
-                authorId: existingNote.id,
+                authorId: currentUser.id,
+                tagId: null,
             }
         })
         return {errorMessage: null}
@@ -43,8 +74,7 @@ export const updateNoteAction = async (noteId: string, text: string, title="") =
         if (noteId.length <= 0) throw new Error("Note ID is required");
         if (text.length <= 0) throw new Error("Text is required");
 
-        const user = await getUser();
-        if (!user) throw new Error("You must be logged in to update a note");
+        await existingUser()
     
         await prismaClient.note.update({
             where: { id: noteId },
@@ -55,15 +85,14 @@ export const updateNoteAction = async (noteId: string, text: string, title="") =
     } catch (error) {
         return handleError(error);
     }
-  };
+};
 
 export const updateNoteTitleAction = async (noteId: string, title="") => {
     try {
         if (noteId.length <= 0) throw new Error("Note ID is required");
         if (title.length <= 0) throw new Error("Text is required");
 
-        const user = await getUser();
-        if (!user) throw new Error("You must be logged in to update a note");
+        await existingUser()
     
         await prismaClient.note.update({
             where: { id: noteId },
@@ -80,8 +109,7 @@ export const updateNoteArchiveAction = async (noteId: string, isArchive=false) =
     try {
         if (noteId.length <= 0) throw new Error("Note ID is required");
 
-        const user = await getUser();
-        if (!user) throw new Error("You must be logged in to update a note");
+        await existingUser()
     
         await prismaClient.note.update({
             where: { id: noteId },
@@ -93,16 +121,70 @@ export const updateNoteArchiveAction = async (noteId: string, isArchive=false) =
         return handleError(error);
     }
 };
+
+export const updateNoteTagAction = async (noteId: string, tagId:string) => {
+    try {
+        if (noteId.length <= 0) throw new Error("Note ID is required")
+        if (tagId.length <= 0) throw new Error("Tag ID is required");
+
+        await existingUser()
+    
+        await prismaClient.note.update({
+            where: { id: noteId },
+            data: { tagId },
+        });
+    
+        return { errorMessage: null };
+    } catch (error) {
+        return handleError(error);
+    }
+}
+
+export const updateNoteActionDev = async (id: string, title: string="", text:string="", archived:boolean=false, tagId:string|null=null) : Promise<ErrorResponse| NoteType> => {
+    try {
+        const parsedData = noteSchema.safeParse({ id, title, text, isArchived: archived, tagId });
+        if (!parsedData.success) {
+            const errorMessages = parsedData.error.errors.map(err => err.message).join(", ");
+            throw new Error(`Validation failed: ${errorMessages}`);
+        }
+        
+        const { id: noteId, title: noteTitle, text: noteText, isArchived, tagId: noteTagId } = parsedData.data
+
+        await existingUser()
+        const result : NoteType = await prismaClient.note.update({
+            where: { id: noteId },
+            data: { 
+                title: noteTitle,
+                text: noteText,
+                isArchived,
+                tagId: noteTagId,
+            },
+            select: {
+                id: true,
+                title: true,
+                text: true,
+                isArchived: true,
+                tagId: true,
+            }
+        });
+    
+        const parsedResult = noteSchema.safeParse(result);
+        if (!parsedResult.success) throw new Error("Invalid tag data")
+
+        return parsedResult.data;
+    } catch (error) {
+        return handleError(error);
+    }
+}
   
 export const deleteNoteAction = async (noteId: string) => {
     try {
         if (noteId.length <= 0) throw new Error("Note ID is required");
 
-        const user = await getUser();
-        if (!user) throw new Error("You must be logged in to delete a note");
+        const currentUser = await existingUser()
     
         await prismaClient.note.delete({
-            where: { id: noteId, authorId: user.id },
+            where: { id: noteId, authorId: currentUser.id },
         });
     
         return { errorMessage: null };
@@ -111,16 +193,10 @@ export const deleteNoteAction = async (noteId: string) => {
     }
 };
 
-const schema = z.object({
-    noteId: z.string().min(1, "Note ID is required"),
-    questions: z.array(z.string().min(1, "Question must not be empty")).min(1, "At least one question is required"),
-    responses: z.array(z.string()).min(0, "At least one response is required"),
-});
-
 export const askAIAction = async (noteId: string, questions: string[], responses: string[]) => {
     try {
         // Validate inputs
-        const parsedData = schema.safeParse({ noteId, questions, responses });
+        const parsedData = schemaNoteAskAIAction.safeParse({ noteId, questions, responses });
         if (!parsedData.success) {
             const errorMessages = parsedData.error.errors.map(err => err.message).join(", ");
             throw new Error(`Validation failed: ${errorMessages}`);
@@ -128,23 +204,17 @@ export const askAIAction = async (noteId: string, questions: string[], responses
         noteId = parsedData.data.noteId;
         questions = parsedData.data.questions;
         responses = parsedData.data.responses;
-        // if (noteId.length <= 0 || questions.length <= 0 || responses.length <= 0) throw new Error("Note ID is required or questions/responses are empty");
 
-        const user = await getUser();
-        if (!user) throw new Error("You must be logged in to ask AI");
+        const currentUser = await existingUser()
     
         const note = await prismaClient.note.findUnique({
             where: { id: noteId, author: {
-                email: user.email,
+                email: currentUser.email,
             } },
             select: { text: true, createdAt: true, updatedAt: true },
         });
     
         if (!note) {
-            console.log(`Note with ID ${noteId} not found for user ${user.email}`);
-            console.log(`NOtes details:`, note);
-            
-            
             throw new Error("Note not found")
         };
 
