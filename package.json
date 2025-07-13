@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "release -i": "release-it --ci",
+    "release ma -i": "release-it major --ci",
+    "release p -i": "release-it patch --ci",
+    "release mi -i": "release-it minor --ci"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -44,6 +48,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@release-it/conventional-changelog": "^10.0.1",
     "@types/node": "^20.17.32",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -52,6 +57,7 @@
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.7.0",
+    "release-it": "^19.0.3",
     "ts-node": "^10.9.2",
     "tw-animate-css": "^1.2.8",
     "typescript": "^5.8.3"
