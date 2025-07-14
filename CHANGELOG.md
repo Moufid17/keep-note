@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1](https://github.com/Moufid17/keep-note/compare/v1.2.0...v1.2.1) (2025-07-14)
+
+### Bug Fixes
+
+* correct commit message casing in release configuration ([e42b0f9](https://github.com/Moufid17/keep-note/commit/e42b0f9c09e7f8da423c0c6f5abad3ffd6279d6c))
+
 ## 1.2.0 (2025-07-13)
 
 ### Features
