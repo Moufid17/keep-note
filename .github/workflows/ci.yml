@@ -1,9 +1,16 @@
 name: CI
 on:
   push:
+    branches: [main, dev, features/*]
+    paths-ignore:
+      - '.github/workflows/release.yml'
+      - 'CHANGELOG.md'
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [main, dev]
+    paths-ignore:
+      - '.github/workflows/release.yml'
+      - 'CHANGELOG.md'
 jobs:
   validate:
     runs-on: ubuntu-latest
